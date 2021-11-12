@@ -1,3 +1,5 @@
+/doc/*
+
 *.cbp
 *.depend
 *.layout
