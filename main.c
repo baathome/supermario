@@ -45,27 +45,26 @@ Animation initAnimation()
 
 int main()
 {
-    //Variáveis da tela
+    //VariÃ¡veis da tela
     const int screenWidth = 1200;
     const int screenHeight = 700;
     const int splashscreenTimeout = 300;
     const char *windowTitle = "Super Mario DOS";
 
-    MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opção selecionada do menu principal
+    MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opÃ§Ã£o selecionada do menu principal
     int exit = 0; //flag para encerrar o jogo
-    Color mainMenuSelectedArray[7]; //array de cores para pintar a opção selecionada do menu principal
+    Color mainMenuSelectedArray[7]; //array de cores para pintar a opÃ§Ã£o selecionada do menu principal
 
     GameScreen currentScreen = SPLASH;
 
-    Animation animation = initAnimation(); //Inicializa variáveis referentes a animações, como frame speed e tamanhos de texturas
+    Animation animation = initAnimation(); //Inicializa variÃ¡veis referentes a animaÃ§Ãµes, como frame speed e tamanhos de texturas
     int framesCounter = 0;
 
     InitWindow(screenWidth, screenHeight, windowTitle); //Inicializa janela da raylib
 
-    //Inicialização de recursos
+    //InicializaÃ§Ã£o de recursos
     Font fontMario = LoadFontEx("resources/SuperMario256.ttf", 46, 0, 250); //Carrega a fonte para ser usada na janela
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
-
 
 
 
@@ -78,16 +77,16 @@ int main()
     //Loop do jogo
     while (!WindowShouldClose() && !exit)    // Detect window close button or ESC key
     {
-        //Lógica
+        //LÃ³gica
         switch(currentScreen)
         {
             case SPLASH:
             {
-                //Tela de inicialização
+                //Tela de inicializaÃ§Ã£o
 
                 framesCounter++;
 
-                //Temporizador da tela de inicialização (pressione enter para pular)
+                //Temporizador da tela de inicializaÃ§Ã£o (pressione enter para pular)
                 if (framesCounter > splashscreenTimeout || IsKeyPressed(KEY_ENTER))
                 {
                     currentScreen = MAINMENU;
@@ -174,7 +173,7 @@ int main()
             default: break;
         }
         //----------------------------------------------------------------------------------
-        //Gráficos
+        //Grï¿½ficos
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
@@ -183,7 +182,7 @@ int main()
             switch(currentScreen)
             {
                 case SPLASH:
-                { //Tela de inicialização
+                { //Tela de inicializaÃ§Ã£o
                     DrawTextEx(fontMario, windowTitle, (Vector2){ 126.0f, 275.0f }, (float)fontMario.baseSize*1.75+5, 2, BROWN);
                     DrawTextEx(fontMario, windowTitle, (Vector2){ 150.0f, 275.0f }, (float)fontMario.baseSize*1.75, 2, MAROON);
 
@@ -239,10 +238,9 @@ int main()
             }
 
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 
-    //Liberação de memória/Descarregamento de recursos
+    //LiberaÃ§Ã£o de memÃ³ria/Descarregamento de recursos
 
     UnloadFont(fontMario);
     UnloadTexture(marioTextures);
@@ -251,4 +249,3 @@ int main()
 
     return 0;
 }
-
