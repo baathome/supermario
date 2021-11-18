@@ -1,15 +1,12 @@
-#ifndef G_DRAW_H
-#define G_DRAW_H
+#ifndef DRAW_H
+#define DRAW_H
 
-#include "g_defs.h"
+#include "raylib.h"
 
+void drawSplash(Font font, const char *text);
 
-void d_DrawBlocks();
+void drawHelp(Font font);
 
-void d_DrawEnemies();
-
-void d_DrawPlayer();
-
-void d_Draw();
+void drawMainMenu(Font font, const char *text, int currentMainMenuOption);
 
 #endif
