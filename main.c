@@ -33,13 +33,13 @@ Animation initAnimation() {
 
     aux.marioLeft.x = 3.0;
     aux.marioLeft.y =  603.0f;
-    aux.marioLeft.x = aux.marioWidth;
-    aux.marioLeft.x = aux.marioHeight;
+    aux.marioLeft.width = aux.marioWidth;
+    aux.marioLeft.height = aux.marioHeight;
 
     aux.marioRight.x = 3.0;
     aux.marioRight.y =  633.0f;
-    aux.marioRight.x = aux.marioWidth;
-    aux.marioRight.x = aux.marioHeight;
+    aux.marioRight.width = aux.marioWidth;
+    aux.marioRight.height = aux.marioHeight;
 
     return aux;
 }
@@ -66,7 +66,9 @@ int main() {
     Font fontMario = LoadFontEx("resources/SuperMario256.ttf", 46, 0, 250); //Carrega a fonte para ser usada na janela
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
 
-    // l_LoadLevel("resources/fases/fase1.txt");
+    Vector2 marioPosition = { 5.0f, 5.0f };
+
+    l_LoadLevel("resources/fases/fase1.txt");
     // g_CreateBlock(5.0, 5.0, 0);
 
     SetTargetFPS(60);
@@ -87,21 +89,20 @@ int main() {
             } break;
 
             case MAINMENU: {
-                // TODO: Update TITLE screen variables here!
-
-                // Press enter to change to GAMEPLAY screen
-                if (IsKeyPressed(KEY_ENTER)) {
-                    if (currentMainMenuOption == EXIT) exit = 1;
-                    else if (currentMainMenuOption == ABOUTS) currentScreen == ABOUT;
-                    else if (currentMainMenuOption == HELPS) currentScreen == HELP;
-                    else if (currentMainMenuOption == RANKING) currentScreen == SCORE;
+                if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
+                    if (currentMainMenuOption == EXIT || IsKeyPressed(KEY_ESCAPE)) exit = 1;
+                    else if (currentMainMenuOption == HELPS) currentScreen = HELP;
+                    else if (currentMainMenuOption == ABOUTS) currentScreen = ABOUT;
+                    else if (currentMainMenuOption == RANKING) currentScreen = SCORE;
                     else {
                         currentScreen = GAME;
 
                         if (currentMainMenuOption == NEWGAME) {
-                            l_LoadLevel("resources/fases/fase1.txt");
+                            //load stage 1
                         } else if (currentMainMenuOption == CONTINUE) {
+                            //loadsave
                         } else if (currentMainMenuOption == LOADMAP) {
+                            //loadmap
                         }
                     }
                 } else if (IsKeyPressed(KEY_DOWN)) {
@@ -114,37 +115,29 @@ int main() {
             } break;
 
             case GAME: {
-                // TODO: Update GAMEPLAY screen variables here!
-                g_GameMain();
-                // Press enter to change to ENDING screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
-                    currentScreen = SCORE;
+                if (IsKeyPressed(KEY_ESCAPE)) {
+                    //TODO: pause game, option to save progress
+                } else {
+                    g_GameMain();
                 }
             } break;
 
             case SCORE: {
-                // TODO: Update ENDING screen variables here!
-
-                // Press enter to return to TITLE screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
+                // TODO: add scoreboard
+                if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
                     currentScreen = MAINMENU;
                 }
             } break;
 
             case HELP: {
-                // TODO: Update ENDING screen variables here!
-
-                // Press enter to return to TITLE screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
+                if (IsKeyPressed(KEY_ESCAPE)) {
                     currentScreen = MAINMENU;
                 }
             } break;
 
             case ABOUT: {
-                // TODO: Update ENDING screen variables here!
-
-                // Press enter to return to TITLE screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
+                // TODO: add section
+                if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
                     currentScreen = MAINMENU;
                 }
             } break;
@@ -175,7 +168,6 @@ int main() {
 
             case MAINMENU: {
                 // TODO: Draw TITLE screen here!
-                DrawRectangle(0, 0, screenWidth, screenHeight, BLACK);
                 DrawTextEx(fontMario, windowTitle, (Vector2) { 272.0f, 75.0f }, (float)fontMario.baseSize * 1.2 + 2, 2, BROWN);
                 DrawTextEx(fontMario, windowTitle, (Vector2) { 280.0f, 75.0f }, (float)fontMario.baseSize * 1.2, 2, MAROON);
 
@@ -207,6 +199,14 @@ int main() {
                 DrawRectangle(0, 0, screenWidth, screenHeight, BLUE);
                 DrawText("SCORE SCREEN", 20, 20, 40, DARKBLUE);
                 DrawText("PRESS ENTER or TAP to RETURN to TITLE SCREEN", 120, 220, 20, DARKBLUE);
+            } break;
+
+            case HELP: {
+                DrawTextEx(fontMario, "A / <-		Ir para a esquerda\n\nD / ->		Ir para a direita\n\nS / v		Descer da plataforma atual\n\nW / ^ / [espaço]		Pular\n\nESC		Pausar\n\n\n\n\nAperte ESC ou Enter para retornar ao menu principal", (Vector2) { 0.0f, 0.0f }, (float)fontMario.baseSize, 2, BROWN);
+            } break;
+
+            case ABOUT: {
+                //bla
             } break;
 
             default: break;
