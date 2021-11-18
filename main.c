@@ -66,7 +66,7 @@ int main() {
     Font fontMario = LoadFontEx("resources/SuperMario256.ttf", 46, 0, 250); //Carrega a fonte para ser usada na janela
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
 
-
+    l_LoadLevel("resources/fases/fase1.txt");
     // g_CreateBlock(5.0, 5.0, 0);
 
     SetTargetFPS(60);
