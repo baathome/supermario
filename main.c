@@ -1,19 +1,18 @@
-/*Daniel da Silva Severiano dos Santos - cartao numero - turma
-Programa Final da disciplina de
-*/
+/* Daniel da Silva Severiano dos Santos - cartao numero - turma
+   Programa Final da disciplina de
+ */
 
 //includes
-#include "raylib.h"
+#include "raylib.h" // lint-disable-line no-use-before-define
 #include "game.h"
 #include "draw.h"
 #include "level.h"
 
 //typedefs
-typedef enum GameScreen { SPLASH = 0, MAINMENU, GAME, SCORE, HELP, ABOUT} GameScreen;
-typedef enum MainMenuOption { NEWGAME = 0, CONTINUE, LOADMAP, RANKING, HELPS, ABOUTS, EXIT} MainMenuOption;
+typedef enum GameScreen { SPLASH = 0, MAINMENU, GAME, SCORE, HELP, ABOUT }                     GameScreen;
+typedef enum MainMenuOption { NEWGAME = 0, CONTINUE, LOADMAP, RANKING, HELPS, ABOUTS, EXIT }   MainMenuOption;
 
-typedef struct Animation
-{
+typedef struct Animation {
     int currentFrame;
     int frameSpeed;
 
@@ -23,8 +22,7 @@ typedef struct Animation
     Rectangle marioRight;
 } Animation;
 
-Animation initAnimation()
-{
+Animation initAnimation() {
     Animation aux;
 
     aux.currentFrame = 0;
@@ -46,207 +44,178 @@ Animation initAnimation()
     return aux;
 }
 
-int main()
-{
-    //Vari�veis da tela
+int main() {
+    //Variáveis da tela
     const int screenWidth = 1200;
     const int screenHeight = 700;
     const int splashscreenTimeout = 300;
     const char *windowTitle = "Super Mario DOS";
 
-    MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a op��o selecionada do menu principal
+    MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opção selecionada do menu principal
     int exit = 0; //flag para encerrar o jogo
-    Color mainMenuSelectedArray[7]; //array de cores para pintar a op��o selecionada do menu principal
+    Color mainMenuSelectedArray[7]; //array de cores para pintar a opção selecionada do menu principal
 
     GameScreen currentScreen = SPLASH;
 
-    Animation animation = initAnimation(); //Inicializa vari�veis referentes a anima��es, como frame speed e tamanhos de texturas
+    Animation animation = initAnimation(); //Inicializa variáveis referentes a animações, como frame speed e tamanhos de texturas
     int framesCounter = 0;
 
     InitWindow(screenWidth, screenHeight, windowTitle); //Inicializa janela da raylib
 
-    //Inicializa��o de recursos
+    //Inicialização de recursos
     Font fontMario = LoadFontEx("resources/SuperMario256.ttf", 46, 0, 250); //Carrega a fonte para ser usada na janela
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
 
 
     // g_CreateBlock(5.0, 5.0, 0);
 
-
     SetTargetFPS(60);
 
     //Loop do jogo
-    while (!WindowShouldClose() && !exit)    // Detect window close button or ESC key
-    {
-        //L�gica
-        switch(currentScreen)
-        {
-            case SPLASH:
-            {
-                //Tela de inicializa��o
+    while (!WindowShouldClose() && !exit) {
+        //Lógica
+        switch (currentScreen) {
+            case SPLASH: {
+                //Tela de inicialização
 
                 framesCounter++;
 
-                //Temporizador da tela de inicializa��o (pressione enter para pular)
-                if (framesCounter > splashscreenTimeout || IsKeyPressed(KEY_ENTER))
-                {
+                //Temporizador da tela de inicialização (pressione enter para pular)
+                if (framesCounter > splashscreenTimeout || IsKeyPressed(KEY_ENTER)) {
                     currentScreen = MAINMENU;
                 }
             } break;
-            case MAINMENU:
-            {
+
+            case MAINMENU: {
                 // TODO: Update TITLE screen variables here!
 
                 // Press enter to change to GAMEPLAY screen
-                if (IsKeyPressed(KEY_ENTER))
-                {
+                if (IsKeyPressed(KEY_ENTER)) {
                     if (currentMainMenuOption == EXIT) exit = 1;
-                    else if(currentMainMenuOption == ABOUTS) currentScreen == ABOUT;
-                    else if(currentMainMenuOption == HELPS) currentScreen == HELP;
-                    else if(currentMainMenuOption == RANKING) currentScreen == SCORE;
-                    else{
+                    else if (currentMainMenuOption == ABOUTS) currentScreen == ABOUT;
+                    else if (currentMainMenuOption == HELPS) currentScreen == HELP;
+                    else if (currentMainMenuOption == RANKING) currentScreen == SCORE;
+                    else {
                         currentScreen = GAME;
-                        if(currentMainMenuOption == NEWGAME)
-                        {
-                            l_LoadLevel("resources/fases/fase1.txt");
-                        }
-                        else if(currentMainMenuOption == CONTINUE)
-                        {
 
-                        }
-                        else if(currentMainMenuOption == LOADMAP)
-                        {
-
+                        if (currentMainMenuOption == NEWGAME) {
+                        } else if (currentMainMenuOption == CONTINUE) {
+                        } else if (currentMainMenuOption == LOADMAP) {
                         }
                     }
-                }
-                else if(IsKeyPressed(KEY_DOWN))
-                {
-                    if(currentMainMenuOption == 6) currentMainMenuOption = 0;
+                } else if (IsKeyPressed(KEY_DOWN)) {
+                    if (currentMainMenuOption == 6) currentMainMenuOption = 0;
                     else currentMainMenuOption++;
-                }
-                else if(IsKeyPressed(KEY_UP))
-                {
-                    if(!currentMainMenuOption) currentMainMenuOption = 6;
+                } else if (IsKeyPressed(KEY_UP)) {
+                    if (!currentMainMenuOption) currentMainMenuOption = 6;
                     else currentMainMenuOption--;
                 }
             } break;
-            case GAME:
-            {
+
+            case GAME: {
                 // TODO: Update GAMEPLAY screen variables here!
 
                 // Press enter to change to ENDING screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
-                {
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
                     currentScreen = SCORE;
                 }
             } break;
-            case SCORE:
-            {
+
+            case SCORE: {
                 // TODO: Update ENDING screen variables here!
 
                 // Press enter to return to TITLE screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
-                {
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
                     currentScreen = MAINMENU;
                 }
             } break;
-            case HELP:
-            {
+
+            case HELP: {
                 // TODO: Update ENDING screen variables here!
 
                 // Press enter to return to TITLE screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
-                {
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
                     currentScreen = MAINMENU;
                 }
             } break;
-            case ABOUT:
-            {
+
+            case ABOUT: {
                 // TODO: Update ENDING screen variables here!
 
                 // Press enter to return to TITLE screen
-                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
-                {
+                if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
                     currentScreen = MAINMENU;
                 }
             } break;
+
             default: break;
         }
         //----------------------------------------------------------------------------------
-        //Gr�ficos
+        //Gráficos
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
-            ClearBackground(BLACK);
-            d_Draw();
-            switch(currentScreen)
-            {
-                case SPLASH:
-                { //Tela de inicializa��o
-                    DrawTextEx(fontMario, windowTitle, (Vector2){ 126.0f, 275.0f }, (float)fontMario.baseSize*1.75+5, 2, BROWN);
-                    DrawTextEx(fontMario, windowTitle, (Vector2){ 150.0f, 275.0f }, (float)fontMario.baseSize*1.75, 2, MAROON);
+        ClearBackground(BLACK);
 
-                    DrawTextEx(fontMario, "pressione [Enter] para pular", (Vector2){ 815.0f, 670.0f }, (float)fontMario.baseSize*0.40, 2, BROWN);
+        switch (currentScreen) {
+            case SPLASH: {
+                //Tela de inicialização
+                DrawTextEx(fontMario, windowTitle, (Vector2) { 126.0f, 275.0f }, (float)fontMario.baseSize * 1.75 + 5, 2, BROWN);
+                DrawTextEx(fontMario, windowTitle, (Vector2) { 150.0f, 275.0f }, (float)fontMario.baseSize * 1.75, 2, MAROON);
 
-                    if(framesCounter < splashscreenTimeout/2){
-                        DrawRectangle(0,0,screenWidth, screenHeight-100, Fade(BLACK, (splashscreenTimeout/2-framesCounter)/(splashscreenTimeout*0.5)));
-                    }
-                    else{
-                        DrawRectangle(0,0,screenWidth, screenHeight-100, Fade(BLACK, (framesCounter-splashscreenTimeout/2)/(splashscreenTimeout*0.5)));
-                    }
+                DrawTextEx(fontMario, "pressione [Enter] para pular", (Vector2) { 815.0f, 670.0f }, (float)fontMario.baseSize * 0.40, 2, BROWN);
 
-                } break;
-                case MAINMENU:
-                {
-                    // TODO: Draw TITLE screen here!
-                    DrawRectangle(0, 0, screenWidth, screenHeight, BLACK);
-                    DrawTextEx(fontMario, windowTitle, (Vector2){ 272.0f, 75.0f }, (float)fontMario.baseSize*1.2+2, 2, BROWN);
-                    DrawTextEx(fontMario, windowTitle, (Vector2){ 280.0f, 75.0f }, (float)fontMario.baseSize*1.2, 2, MAROON);
+                if (framesCounter < splashscreenTimeout / 2) {
+                    DrawRectangle(0, 0, screenWidth, screenHeight - 100, Fade(BLACK, (splashscreenTimeout / 2 - framesCounter) / (splashscreenTimeout * 0.5)));
+                } else {
+                    DrawRectangle(0, 0, screenWidth, screenHeight - 100, Fade(BLACK, (framesCounter - splashscreenTimeout / 2) / (splashscreenTimeout * 0.5)));
+                }
+            } break;
 
-                    for(int i=0; i < 7; i++){
-                        mainMenuSelectedArray[i] = WHITE;
-                    }
-                    mainMenuSelectedArray[currentMainMenuOption] = BLUE;
+            case MAINMENU: {
+                // TODO: Draw TITLE screen here!
+                DrawRectangle(0, 0, screenWidth, screenHeight, BLACK);
+                DrawTextEx(fontMario, windowTitle, (Vector2) { 272.0f, 75.0f }, (float)fontMario.baseSize * 1.2 + 2, 2, BROWN);
+                DrawTextEx(fontMario, windowTitle, (Vector2) { 280.0f, 75.0f }, (float)fontMario.baseSize * 1.2, 2, MAROON);
 
-                    DrawText("Novo Jogo", 500, 200, 36, mainMenuSelectedArray[0]);
-                    DrawText("Continuar", 506, 250, 36, mainMenuSelectedArray[1]);
-                    DrawText("Carregar Mapa", 450, 300, 36, mainMenuSelectedArray[2]);
-                    DrawText("Ranking", 522, 350, 36, mainMenuSelectedArray[3]);
-                    DrawText("Ajuda", 542, 400, 36, mainMenuSelectedArray[4]);
-                    DrawText("Sobre", 538, 450, 36, mainMenuSelectedArray[5]);
-                    DrawText("Sair", 557, 500, 36, mainMenuSelectedArray[6]);
+                for (int i = 0; i < 7; i++) {
+                    mainMenuSelectedArray[i] = WHITE;
+                }
 
+                mainMenuSelectedArray[currentMainMenuOption] = BLUE;
 
-                } break;
-                case GAME:
-                {
-                    // TODO: Draw GAMEPLAY screen here!
-                    // DrawRectangle(0, 0, screenWidth, screenHeight, BLACK);
-                    // DrawText("GAME SCREEN", 20, 20, 40, MAROON);
-                    // DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
-                } break;
-                case SCORE:
-                {
-                    // TODO: Draw ENDING screen here!
-                    DrawRectangle(0, 0, screenWidth, screenHeight, BLUE);
-                    DrawText("SCORE SCREEN", 20, 20, 40, DARKBLUE);
-                    DrawText("PRESS ENTER or TAP to RETURN to TITLE SCREEN", 120, 220, 20, DARKBLUE);
+                DrawText("Novo Jogo", 500, 200, 36, mainMenuSelectedArray[0]);
+                DrawText("Continuar", 506, 250, 36, mainMenuSelectedArray[1]);
+                DrawText("Carregar Mapa", 450, 300, 36, mainMenuSelectedArray[2]);
+                DrawText("Ranking", 522, 350, 36, mainMenuSelectedArray[3]);
+                DrawText("Ajuda", 542, 400, 36, mainMenuSelectedArray[4]);
+                DrawText("Sobre", 538, 450, 36, mainMenuSelectedArray[5]);
+                DrawText("Sair", 557, 500, 36, mainMenuSelectedArray[6]);
+            } break;
 
-                } break;
-                default: break;
-            }
+            case GAME: {
+                // TODO: Draw GAMEPLAY screen here!
+                // DrawRectangle(0, 0, screenWidth, screenHeight, BLACK);
+                // DrawText("GAME SCREEN", 20, 20, 40, MAROON);
+                // DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
+                d_Draw();
+            } break;
+
+            case SCORE: {
+                // TODO: Draw ENDING screen here!
+                DrawRectangle(0, 0, screenWidth, screenHeight, BLUE);
+                DrawText("SCORE SCREEN", 20, 20, 40, DARKBLUE);
+                DrawText("PRESS ENTER or TAP to RETURN to TITLE SCREEN", 120, 220, 20, DARKBLUE);
+            } break;
+
+            default: break;
+        }
+
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 
-    //Libera��o de mem�ria/Descarregamento de recursos
-
-    UnloadFont(fontMario);
     UnloadTexture(marioTextures);
-
     CloseWindow();
 
     return 0;
 }
-
