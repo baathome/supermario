@@ -1,7 +1,1 @@
 /doc/*
-
-*.cbp
-*.depend
-*.layout
-/bin/*
-/obj/*
