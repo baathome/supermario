@@ -98,8 +98,6 @@ int main() {
     Font fontMario = LoadFontEx("resources/SuperMario256.ttf", 46, 0, 250); //Carrega a fonte para ser usada na janela
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
 
-    Vector2 marioPosition = { 5.0f, 5.0f };
-
     SetExitKey(KEY_BACKSPACE); //Libera ESC para uso e encerra imediatamente a janela com Backspace
 
     l_LoadLevel("resources/fases/fase1.txt");
