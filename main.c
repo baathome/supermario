@@ -4,6 +4,9 @@
 
 //includes
 #include "raylib.h" // lint-disable-line no-use-before-define
+#include "game.h"
+#include "draw.h"
+#include "level.h"
 
 //typedefs
 typedef enum GameScreen { SPLASH = 0, MAINMENU, GAME, SCORE, HELP, ABOUT }                     GameScreen;
@@ -64,6 +67,9 @@ int main() {
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
 
     Vector2 marioPosition = { 5.0f, 5.0f };
+
+    l_LoadLevel("resources/fases/fase1.txt");
+    // g_CreateBlock(5.0, 5.0, 0);
 
     SetTargetFPS(60);
 
@@ -190,9 +196,10 @@ int main() {
 
             case GAME: {
                 // TODO: Draw GAMEPLAY screen here!
-                DrawRectangle(0, 0, screenWidth, screenHeight, BLACK);
-                DrawText("GAME SCREEN", 20, 20, 40, MAROON);
-                DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
+                // DrawRectangle(0, 0, screenWidth, screenHeight, BLACK);
+                // DrawText("GAME SCREEN", 20, 20, 40, MAROON);
+                // DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
+                d_Draw();
             } break;
 
             case SCORE: {
@@ -216,11 +223,7 @@ int main() {
         EndDrawing();
     }
 
-    //Liberação de memória/Descarregamento de recursos
-
-    UnloadFont(fontMario);
     UnloadTexture(marioTextures);
-
     CloseWindow();
 
     return 0;
