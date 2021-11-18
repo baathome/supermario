@@ -1,5 +1,6 @@
 /doc/*
 .gcc-flags.json
+.vscode
 *.exe
 *.o
 lib

@@ -8,6 +8,8 @@ void d_DrawBlocks();
 
 void d_DrawEnemies();
 
+void d_DrawPlayer();
+
 void d_Draw();
 
 #endif

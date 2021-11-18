@@ -12,6 +12,8 @@ struct g_block_t *g_CreateBlock(float pos_x, float pos_y, int type);
 
 void g_DestroyBlock(struct g_block_t *block);
 
+void g_PlacePlayer(float pos_x, float pos_y);
+
 void g_PlayerInput();
 
 void g_EnemyImpact();
@@ -19,6 +21,8 @@ void g_EnemyImpact();
 void g_PowImpact();
 
 void g_PlayerImpact(struct g_enemy_t *enemy);
+
+void g_GameMain();
 
 
 

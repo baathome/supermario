@@ -151,16 +151,8 @@ int main() {
             case GAME: {
                 if (IsKeyPressed(KEY_ESCAPE)) {
                     //TODO: pause game, option to save progress
-                } else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) {
-                    //L
-                } else if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_D)) {
-                    //R
-                } else if (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) {
-                    //go down
-                } else if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_SPACE)) {
-                    //jump
                 } else {
-                    //player doesnt move/ necessary? or just run after ifs
+                    g_GameMain();
                 }
             } break;
 
