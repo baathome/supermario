@@ -130,7 +130,7 @@ int main() {
             } break;
 
             case HELP: {
-                if (IsKeyPressed(KEY_ESCAPE)) {
+                if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
                     currentScreen = MAINMENU;
                 }
             } break;
@@ -202,7 +202,7 @@ int main() {
             } break;
 
             case HELP: {
-                DrawTextEx(fontMario, "A / <-		Ir para a esquerda\n\nD / ->		Ir para a direita\n\nS / v		Descer da plataforma atual\n\nW / ^ / [espaço]		Pular\n\nESC		Pausar\n\n\n\n\nAperte ESC ou Enter para retornar ao menu principal", (Vector2) { 0.0f, 0.0f }, (float)fontMario.baseSize, 2, BROWN);
+                DrawTextEx(fontMario, "\t\t\t\tA / <-\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tIr para a esquerda\n\n\t\t\t\tD / ->\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t Ir para a direita\n\n\t\t\t\tS / v\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tDescer da plataforma atual\n\nW / ^ / [espaco]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPular\n\n\t\t\t\t\tESC\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPausar\n\n\n\n\n\n\t\tAperte ESC ou Enter para retornar ao menu principal", (Vector2) { 150.0f, 150.0f }, (float)fontMario.baseSize * 0.5, 2, BROWN);
             } break;
 
             case ABOUT: {
