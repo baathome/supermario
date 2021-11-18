@@ -22,8 +22,15 @@ void d_DrawEnemies()
 
 }
 
+void d_DrawPlayer()
+{
+    Color color = {.g = 255, .a = 255};
+    DrawRectangle((int)g_player.rect.x, (int)g_player.rect.y, 10, 25, color);
+}
+
 void d_Draw()
 {
     d_DrawBlocks();
     d_DrawEnemies();
+    d_DrawPlayer();
 }

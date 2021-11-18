@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdlib.h>
+#include "raylib.h"
 #include "game.h"
 
 struct g_enemy_t *g_enemies = NULL;
@@ -46,7 +47,34 @@ struct g_block_t *g_CreateBlock(float pos_x, float pos_y, int type)
 
 void g_DestroyBlock(struct g_block_t *block)
 {
+    if(block)
+    {
+        if(!block->prev)
+        {
+            g_blocks = block->next;
+        }
+        else
+        {
+            block->prev->next = block->next;
+        }
 
+        if(block->next)
+        {
+            block->next->prev = block->prev;
+        }
+        else
+        {
+            g_last_block = block->prev;
+        }
+
+        free(block);
+    }
+}
+
+void g_PlacePlayer(float pos_x, float pos_y)
+{
+    g_player.rect.x = pos_x;
+    g_player.rect.y = pos_y;
 }
 
 void g_PlayerInput()
@@ -67,4 +95,9 @@ void g_PowImpact()
 void g_PlayerImpact(struct g_enemy_t *enemy)
 {
 
+}
+
+void g_GameMain()
+{
+    g_PlayerInput();
 }

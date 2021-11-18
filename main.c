@@ -66,7 +66,7 @@ int main() {
     Font fontMario = LoadFontEx("resources/SuperMario256.ttf", 46, 0, 250); //Carrega a fonte para ser usada na janela
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
 
-    l_LoadLevel("resources/fases/fase1.txt");
+    // l_LoadLevel("resources/fases/fase1.txt");
     // g_CreateBlock(5.0, 5.0, 0);
 
     SetTargetFPS(60);
@@ -99,6 +99,7 @@ int main() {
                         currentScreen = GAME;
 
                         if (currentMainMenuOption == NEWGAME) {
+                            l_LoadLevel("resources/fases/fase1.txt");
                         } else if (currentMainMenuOption == CONTINUE) {
                         } else if (currentMainMenuOption == LOADMAP) {
                         }
@@ -114,7 +115,7 @@ int main() {
 
             case GAME: {
                 // TODO: Update GAMEPLAY screen variables here!
-
+                g_GameMain();
                 // Press enter to change to ENDING screen
                 if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP)) {
                     currentScreen = SCORE;

@@ -1,6 +1,6 @@
 INC_DIR := lib/raylib/include
 LIB_DIR := lib/raylib/lib
-SRC := ./$(wildcard *.c)
+SRC := $(wildcard ./*.c)
 OBJ := $(SRC:.c=.o)
 EXE := supermario.exe
 
