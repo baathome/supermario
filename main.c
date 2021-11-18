@@ -44,6 +44,39 @@ Animation initAnimation() {
     return aux;
 }
 
+void drawSplash(Font font, const char *text) { //Desenha a tela de inicialização
+    DrawTextEx(font, text, (Vector2) { 126.0f, 275.0f }, (float)font.baseSize * 1.75 + 5, 2, BROWN);
+    DrawTextEx(font, text, (Vector2) { 150.0f, 275.0f }, (float)font.baseSize * 1.75, 2, MAROON);
+
+    DrawTextEx(font, "pressione [Enter] para pular", (Vector2) { 815.0f, 670.0f }, (float)font.baseSize * 0.40, 2, BROWN);
+}
+
+void drawHelp(Font font) { //Desenha a tela de ajuda (manual)
+    DrawTextEx(font, "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAtaque os inimigos por baixo para enfraquece-los\n\t\t\t\tDepois de enfraquecidos, voce pode mata-los simplesmente passando por cima deles\n\t\t\t\t\t\tBata na caixa especial para adquirir grandes poderes (sem as responsabilidades)", (Vector2) { 5.0f, 50.0f }, (float)font.baseSize * 0.45, 0, BROWN);
+    DrawTextEx(font, "\t\t\t\tA / <-\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tIr para a esquerda\n\n\t\t\t\tD / ->\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t Ir para a direita\n\n\t\t\t\tS / v\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tDescer da plataforma atual\n\nW / ^ / [espaco]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPular\n\n\t\t\t\t\tESC\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPausar\n\n\n\n\tAperte ESC ou Enter para retornar ao menu principal", (Vector2) { 150.0f, 230.0f }, (float)font.baseSize * 0.5, 2, BROWN);
+}
+
+void drawMainMenu(Font font, const char *text, int currentMainMenuOption) { //Desenha o menu principal
+    Color mainMenuSelectedArray[7];     //array de cores para pintar a opção selecionada do menu principal
+
+    DrawTextEx(font, text, (Vector2) { 272.0f, 75.0f }, (float)font.baseSize * 1.2 + 2, 2, BROWN);
+    DrawTextEx(font, text, (Vector2) { 280.0f, 75.0f }, (float)font.baseSize * 1.2, 2, MAROON);
+
+    for (int i = 0; i < 7; i++) {
+        mainMenuSelectedArray[i] = WHITE;
+    }
+
+    mainMenuSelectedArray[currentMainMenuOption] = BLUE;
+
+    DrawText("Novo Jogo", 500, 200, 36, mainMenuSelectedArray[0]);
+    DrawText("Continuar", 506, 250, 36, mainMenuSelectedArray[1]);
+    DrawText("Carregar Mapa", 450, 300, 36, mainMenuSelectedArray[2]);
+    DrawText("Ranking", 522, 350, 36, mainMenuSelectedArray[3]);
+    DrawText("Ajuda", 542, 400, 36, mainMenuSelectedArray[4]);
+    DrawText("Sobre", 538, 450, 36, mainMenuSelectedArray[5]);
+    DrawText("Sair", 557, 500, 36, mainMenuSelectedArray[6]);
+}
+
 int main() {
     //Variáveis da tela
     const int screenWidth = 1200;
@@ -53,7 +86,6 @@ int main() {
 
     MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opção selecionada do menu principal
     int exit = 0; //flag para encerrar o jogo
-    Color mainMenuSelectedArray[7]; //array de cores para pintar a opção selecionada do menu principal
 
     GameScreen currentScreen = SPLASH;
 
@@ -67,6 +99,8 @@ int main() {
     Texture2D marioTextures = LoadTexture("resources/texturemap.png");
 
     Vector2 marioPosition = { 5.0f, 5.0f };
+
+    SetExitKey(KEY_BACKSPACE); //Libera ESC para uso e encerra imediatamente a janela com Backspace
 
     l_LoadLevel("resources/fases/fase1.txt");
     // g_CreateBlock(5.0, 5.0, 0);
@@ -161,11 +195,7 @@ int main() {
 
         switch (currentScreen) {
             case SPLASH: {
-                //Tela de inicialização
-                DrawTextEx(fontMario, windowTitle, (Vector2) { 126.0f, 275.0f }, (float)fontMario.baseSize * 1.75 + 5, 2, BROWN);
-                DrawTextEx(fontMario, windowTitle, (Vector2) { 150.0f, 275.0f }, (float)fontMario.baseSize * 1.75, 2, MAROON);
-
-                DrawTextEx(fontMario, "pressione [Enter] para pular", (Vector2) { 815.0f, 670.0f }, (float)fontMario.baseSize * 0.40, 2, BROWN);
+                drawSplash(fontMario, windowTitle);
 
                 if (framesCounter < splashscreenTimeout / 2) {
                     DrawRectangle(0, 0, screenWidth, screenHeight - 100, Fade(BLACK, (splashscreenTimeout / 2 - framesCounter) / (splashscreenTimeout * 0.5)));
@@ -175,23 +205,7 @@ int main() {
             } break;
 
             case MAINMENU: {
-                // TODO: Draw TITLE screen here!
-                DrawTextEx(fontMario, windowTitle, (Vector2) { 272.0f, 75.0f }, (float)fontMario.baseSize * 1.2 + 2, 2, BROWN);
-                DrawTextEx(fontMario, windowTitle, (Vector2) { 280.0f, 75.0f }, (float)fontMario.baseSize * 1.2, 2, MAROON);
-
-                for (int i = 0; i < 7; i++) {
-                    mainMenuSelectedArray[i] = WHITE;
-                }
-
-                mainMenuSelectedArray[currentMainMenuOption] = BLUE;
-
-                DrawText("Novo Jogo", 500, 200, 36, mainMenuSelectedArray[0]);
-                DrawText("Continuar", 506, 250, 36, mainMenuSelectedArray[1]);
-                DrawText("Carregar Mapa", 450, 300, 36, mainMenuSelectedArray[2]);
-                DrawText("Ranking", 522, 350, 36, mainMenuSelectedArray[3]);
-                DrawText("Ajuda", 542, 400, 36, mainMenuSelectedArray[4]);
-                DrawText("Sobre", 538, 450, 36, mainMenuSelectedArray[5]);
-                DrawText("Sair", 557, 500, 36, mainMenuSelectedArray[6]);
+                drawMainMenu(fontMario, windowTitle, currentMainMenuOption);
             } break;
 
             case GAME: {
@@ -210,7 +224,7 @@ int main() {
             } break;
 
             case HELP: {
-                DrawTextEx(fontMario, "\t\t\t\tA / <-\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tIr para a esquerda\n\n\t\t\t\tD / ->\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t Ir para a direita\n\n\t\t\t\tS / v\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tDescer da plataforma atual\n\nW / ^ / [espaco]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPular\n\n\t\t\t\t\tESC\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPausar\n\n\n\n\n\n\t\tAperte ESC ou Enter para retornar ao menu principal", (Vector2) { 150.0f, 150.0f }, (float)fontMario.baseSize * 0.5, 2, BROWN);
+                drawHelp(fontMario);
             } break;
 
             case ABOUT: {
