@@ -9,7 +9,7 @@
 #include "draw.h"
 #include "player.h"
 #include "level.h"
-// #include "level.h"
+#include "inimigs.h"
 
 //typedefs
 typedef enum GameScreen { SPLASH = 0, MAINMENU, GAME, SCORE, HELP, ABOUT }                     GameScreen; // TODO: LOAD SCREEN
@@ -29,12 +29,17 @@ int main() {
 
     Mario mario = initMario();
 
+    Inimigs inimigs = initInimigs();
+
     Rectangle marioRec = { 0.0f, 0.0f, mario.txL.width / 8.0, mario.txL.height };
     Rectangle marioDestRec = { 0.0f, 0.0f, MARIO_WIDTH, MARIO_HEIGHT };
 
+    Rectangle InimigsRec = { 1000.0f, 30.0f, inimigs.txL.width / 5.0, inimigs.txL.height };
+    Rectangle destInimigsRec = { 1000.0f, 30.0f, Inimigs_WIDTH, Inimigs_HEIGHT };
+
     Platform platforms[20];
 
-    initPlatforms(&platforms, 20);
+    //initPlatforms(&platforms, 20);
 
     printf("\n\n\nplatX = %d\n\n\n", platforms[0].start.x);
 
@@ -56,6 +61,7 @@ int main() {
     // g_CreateBlock(5.0, 5.0, 0);
 
     SetTargetFPS(60);
+    inimigs.facingRight = true;
 
     //Loop do jogo
     while (!WindowShouldClose() && !flagExit) { //TOD: exit only through windowshouldclose
@@ -144,11 +150,15 @@ int main() {
                     mario.pos.x += mario.speed.x * mario.speedMultiplier.x;
                     mario.pos.y += mario.speed.y * mario.speedMultiplier.y;
 
+                    inimigs.pos.x += inimigs.speed.x * inimigs.speedMultiplier.x;
+                    inimigs.pos.y += inimigs.speed.y * inimigs.speedMultiplier.y;
+
                     //printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
 
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
                         mario.currentAnimationFrame++;
+                        inimigs.currentAnimationFrame++;
                     }
 
                     //g_GameMain();
@@ -167,6 +177,20 @@ int main() {
                         mario.speed.x = 0;
                         mario.currentAnimationFrame = 0;
                     }
+
+                    if (inimigs.speed.x = 0) {
+                        inimigs.currentAnimationFrame = 0;
+                    } else if (inimigs.facingRight = true) {
+                        inimigs.speed.x = 1;
+
+                        if (inimigs.currentAnimationFrame > Inimigs_WALK4) inimigs.currentAnimationFrame = Inimigs_WALK1;
+                    } else if (inimigs.facingRight = false) {
+                        inimigs.speed.x = -1;
+
+                        if (inimigs.currentAnimationFrame > Inimigs_WALK4) inimigs.currentAnimationFrame = Inimigs_WALK1;
+                    }
+
+                    InimigsRec.x = (inimigs.currentAnimationFrame * InimigsRec.width);
 
                     marioRec.x = (mario.currentAnimationFrame * marioRec.width);
                 }
@@ -222,8 +246,11 @@ int main() {
                 // DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
                 //d_Draw();
 
-                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);                         //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);  //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(mario.txL, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
+
+                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE);                            //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE);
 
                 if (flagPause) {
                     DrawRectangle(0, 0, screenWidth, screenHeight, Fade(BLACK, 0.5));
@@ -256,6 +283,7 @@ int main() {
 
     UnloadFont(fontMario);
     unloadMarioTX(mario);
+    unloadInimigsTX(inimigs);
     CloseWindow();
 
     return 0;

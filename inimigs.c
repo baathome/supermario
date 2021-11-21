@@ -14,8 +14,8 @@ Inimigs initInimigs() {
     inimigs.facingRight = true;
 
     inimigs.lives = 1;
-    inimigs.txR = LoadTexture("resources/inimigsRight.png"); //TODO: add check to see if screen is init
-    inimigs.txL = LoadTexture("resources/inimigsLeft.png");
+    inimigs.txR = LoadTexture("resources/lvl1Right.png"); //TODO: add check to see if screen is init
+    inimigs.txL = LoadTexture("resources/lvl1left.png");
 
     inimigs.currentAnimationFrame = Inimigs_STOPPED;
 
