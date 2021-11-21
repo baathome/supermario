@@ -34,8 +34,8 @@ int main() {
     Rectangle marioRec = { 0.0f, 0.0f, mario.txL.width / 8.0, mario.txL.height };
     Rectangle marioDestRec = { 0.0f, 0.0f, MARIO_WIDTH, MARIO_HEIGHT };
 
-    Rectangle InimigsRec = { 1000.0f, 30.0f, inimigs.txL.width / 5.0, inimigs.txL.height };
-    Rectangle destInimigsRec = { 1000.0f, 30.0f, Inimigs_WIDTH, Inimigs_HEIGHT };
+    Rectangle InimigsRec = { 0.0f, 0.0f, inimigs.txL.width / 5.0, inimigs.txL.height };
+    Rectangle destInimigsRec = { 0.0f, 0.0f, INIMIGS_WIDTH, INIMIGS_HEIGHT };
 
     Rectangle platforms[MAX_PLATFORMS];
 
@@ -159,8 +159,8 @@ int main() {
                     mario.pos.x += mario.speed.x * mario.speedMultiplier.x;
                     mario.pos.y += mario.speed.y * mario.speedMultiplier.y;
 
-                    inimigs.pos.x += inimigs.speed.x * inimigs.speedMultiplier.x;
-                    inimigs.pos.y += inimigs.speed.y * inimigs.speedMultiplier.y;
+                    inimigs.pos.x += inimigs.speed.x;
+                    inimigs.pos.y += inimigs.speed.y;
 
                     //printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
 
@@ -171,17 +171,24 @@ int main() {
                     }
 
                     //g_GameMain();
+                    if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_BACKSPACE)){
+                      mario.pos.y +=  mario.speed.y + MARIO_JUMP - GRAVITY;
+                    }
                     if (IsKeyPressed(KEY_ESCAPE)) flagPause = true;
                     else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
                         mario.speed.x = 1;
                         mario.facingRight = true;
 
-                        if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;                        //TODO: add check on Y velocity
+                        if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;
+                        if (mario.pos.x > 1200 ) mario.pos.x = 0;
+                        //TODO: add check on Y velocity
                     } else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
                         mario.speed.x = -1;
                         mario.facingRight = false;
 
-                        if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;                        //TODO: add check on Y velocity
+                        if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;
+                        if (mario.pos.x < 0 ) mario.pos.x = 1200;
+                        //TODO: add check on Y velocity
                     } else {
                         mario.speed.x = 0;
                         mario.currentAnimationFrame = 0;
@@ -189,14 +196,20 @@ int main() {
 
                     if (inimigs.speed.x = 0) {
                         inimigs.currentAnimationFrame = 0;
-                    } else if (inimigs.facingRight = true) {
-                        inimigs.speed.x = 1;
+                        if (inimigs.state == false) inimigs.currentAnimationFrame = INIMIGS_STUN;
+                    } else if (inimigs.facingRight == true) {
+                        inimigs.speed.x = 2;
 
-                        if (inimigs.currentAnimationFrame > Inimigs_WALK4) inimigs.currentAnimationFrame = Inimigs_WALK1;
-                    } else if (inimigs.facingRight = false) {
-                        inimigs.speed.x = -1;
+                        if (inimigs.currentAnimationFrame > INIMIGS_WALK4) inimigs.currentAnimationFrame = INIMIGS_WALK1;
+                        if (inimigs.pos.x > 1200 ) inimigs.pos.x = 0;
+                        if (inimigs.lvl == 2 && inimigs.angry == false) inimigs.speed.x = 4;
 
-                        if (inimigs.currentAnimationFrame > Inimigs_WALK4) inimigs.currentAnimationFrame = Inimigs_WALK1;
+                    } else if (inimigs.facingRight == false) {
+                        inimigs.speed.x = -2;
+
+                        if (inimigs.currentAnimationFrame > INIMIGS_WALK4) inimigs.currentAnimationFrame = INIMIGS_WALK1;
+                        if (inimigs.pos.x < 0 ) inimigs.pos.x = 1200;
+                        if (inimigs.lvl == 2 && inimigs.angry == false) inimigs.speed.x = -4;
                     }
 
                     InimigsRec.x = (inimigs.currentAnimationFrame * InimigsRec.width);
@@ -258,8 +271,8 @@ int main() {
                 if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);  //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(mario.txL, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
 
-                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE);                            //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
-                else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE);
+                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y }, 0, WHITE);                            //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y }, 0, WHITE);
 
                 for (int i = 0; i < getNextPlatformIndex(platforms, MAX_PLATFORMS); i++) {
                     printf("%d - x: %f  y: %f  width: %f   height: %f\n", i, platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);

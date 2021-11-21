@@ -3,14 +3,14 @@
 
 #include "raylib.h"
 
-typedef enum InimigsConsts { Inimigs_WIDTH = 25, Inimigs_HEIGHT = 45, Inimigs_ANIMATION_SPEED = 10 }  InimigsConsts;
-typedef enum TXInimigsStates { Inimigs_STOPPED = 0, Inimigs_WALK1, Inimigs_WALK2, Inimigs_WALK3, Inimigs_WALK4,}  TXInimigsStates;
+typedef enum InimigsConsts { INIMIGS_WIDTH = 45, INIMIGS_HEIGHT = 45, INIMIGS_ANIMATION_SPEED = 10 }  InimigsConsts;
+typedef enum TXInimigsStates { INIMIGS_STOPPED = 0, INIMIGS_WALK1, INIMIGS_WALK2, INIMIGS_WALK3, INIMIGS_WALK4, INIMIGS_STUN}  TXInimigsStates;
 
 typedef struct Inimigs {
     Vector2 pos;
     Vector2 speed;
     Vector2 speedMultiplier;
-
+    int lvl;
 
 
     bool facingRight;
@@ -18,10 +18,11 @@ typedef struct Inimigs {
     bool alive;
     bool angry;
 
-    int lives;
+
 
     Texture2D txL;
     Texture2D txR;
+    Texture2D stun;
     int currentAnimationFrame;
 } Inimigs;
 

@@ -4,20 +4,23 @@
 Inimigs initInimigs() {
     Inimigs inimigs;
 
-    inimigs.pos.x = 10;
-    inimigs.pos.y = 10;
+    inimigs.pos.x = 5;
+    inimigs.pos.y = 2;
     inimigs.speed.x = 0;
     inimigs.speed.y = 0;
-    inimigs.speedMultiplier.x = 3;
-    inimigs.speedMultiplier.y = 3;
+    inimigs.speedMultiplier.x = 0;
+    inimigs.speedMultiplier.y = 0;
 
     inimigs.facingRight = true;
 
-    inimigs.lives = 1;
+    inimigs.state = true; // walking
+    inimigs.alive = true; //alive
+    inimigs.angry = true;//not running
+
     inimigs.txR = LoadTexture("resources/lvl1Right.png"); //TODO: add check to see if screen is init
     inimigs.txL = LoadTexture("resources/lvl1left.png");
-
-    inimigs.currentAnimationFrame = Inimigs_STOPPED;
+    inimigs.stun = LoadTexture("resources/tartarugamorta.png");
+    inimigs.currentAnimationFrame = INIMIGS_STOPPED;
 
     return inimigs;
 }
