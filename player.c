@@ -8,8 +8,8 @@ Mario initMario() {
     mario.pos.y = 5;
     mario.speed.x = 0;
     mario.speed.y = 0;
-    mario.speedMultiplier.x = 3;
-    mario.speedMultiplier.y = 3;
+    mario.speedMultiplier.x = MARIO_SPEED;
+    mario.speedMultiplier.y = 0;
 
     mario.facingRight = true;
     mario.powerup = false;

@@ -164,7 +164,7 @@ int main() {
                     inimigs.pos.y += inimigs.speed.y;
 
 
-                    //printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
+                    printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
 
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
@@ -172,35 +172,55 @@ int main() {
                         inimigs.currentAnimationFrame++;
                     }
 
-                    //g_GameMain();
-                    if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_SPACE)) {
-                        mario.pos.y -=  mario.speed.y - MARIO_JUMP + GRAVITY;
+                    if (!collisionCheckMario(mario, platforms, MAX_PLATFORMS)) {
+                        //mario.speed.y = 1.0;
+                        if (mario.speedMultiplier.y > 0.0 && mario.speed.y < 0.0) mario.speedMultiplier.y -= GRAVITY;
+                        else if (mario.speedMultiplier.y < 0.0) {
+                            mario.speed.y = 1.0;
+                            mario.speedMultiplier.y += GRAVITY;
+                        } else mario.speedMultiplier.y += GRAVITY;
+                    } else {
+                        mario.speed.y = 0.0;
+                        mario.speedMultiplier.y = 0.0;
                     }
 
+                    //g_GameMain();
                     if (IsKeyPressed(KEY_ESCAPE)) flagPause = true;
-                    else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
-                        mario.speed.x = 1;
+                    else if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_SPACE)) && mario.speed.y == 0.0) {
+                        mario.speed.y = -1.0;
+                        mario.speedMultiplier.y = JUMP_SPEED * 6;
+                        mario.currentAnimationFrame = MARIO_JUMP;
+                    } else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
+                        mario.speed.x = 1.0;
                         mario.facingRight = true;
 
                         if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;
 
-                        if (mario.pos.x > 1200) mario.pos.x = 0;
+                        if (mario.pos.x > 1200.0) mario.pos.x = 0.0;
 
                         //if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_SPACE)) {
                         //mario.pos.y -=  mario.speed.y - MARIO_JUMP + (GRAVITY * (framesCounter++ / 60));
                         //TODO: add check on Y velocity}
                     } else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
-                        mario.speed.x = -1;
+                        mario.speed.x = -1.0;
                         mario.facingRight = false;
 
                         if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;
 
-                        if (mario.pos.x < 0) mario.pos.x = 1200;
+                        if (mario.pos.x < 0.0) mario.pos.x = 1200.0;
                     }
                     //TODO: add check on Y velocity
                     else {
-                        mario.speed.x = 0;
+                        mario.speed.x = 0.0;
                         mario.currentAnimationFrame = 0;
+                    }
+
+                    if (mario.speed.y) {
+                        if (mario.speed.y > 0.0) {
+                            mario.currentAnimationFrame = MARIO_FALL;
+                        } else {
+                            mario.currentAnimationFrame = MARIO_JUMP;
+                        }
                     }
 
                     if (inimigs.speed.x = 0) {
@@ -284,15 +304,14 @@ int main() {
                 // DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
                 //d_Draw();
 
-                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);  //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);  //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 //else DrawTexturePro(mario.txL, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
-                else DrawTexturePro(mario.txL, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
+                else DrawTexturePro(mario.txL, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);
 
-                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y }, 0, WHITE);                                       //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
-                else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y }, 0, WHITE);
+                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);                                       //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);
 
                 for (int i = 0; i < getNextPlatformIndex(platforms, MAX_PLATFORMS); i++) {
-                    printf("%d - x: %f  y: %f  width: %f   height: %f\n", i, platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
                     DrawRectangle(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height, DARKBLUE);
                 }
 
