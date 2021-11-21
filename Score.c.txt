@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct player {
+    char Name[20];
+    int Score;
+    struct player *next;
+};
+int main() {
+    typedef struct player * players;
+    typedef struct player   pl;
+
+    players Nuevo;
+    FILE *Scr;
+    char jogador[20];
+    int pontos;
+
+
+    Scr = fopen("sc.dat", "rb");
+    fclose(Scr);
+
+    if ((Scr = fopen("sc.dat", "rb")) == NULL) {
+        printf("No se pudo abrir el archivo \n"); //couldnt open file msg
+        exit(1);
+    }
+
+    rewind(Scr);
+
+    while (!feof(Scr)) {
+        if (*Inicio != NULL) { //read from file and write in struct
+            Nuevo = (players)malloc(sizeof(pl)); //new=pointer
+            fread(&pontos, sizeof(int), 1, Scr);
+            fread(jogador, sizeof(char), sizeof(jogador), Scr);
+            ///copies data in structure
+            strcpy(Nuevo->Name, jogador);
+            strcpy(Nuevo->Score, pontos);
+            printf("---------------------------------\n"); //display info
+            printf("\nJogador: ");
+            puts(jogador);
+            printf("\nPontos: ");
+            puts(pontos);
+            Nuevo->next = *Inicio;
+            *Inicio = Nuevo;
+        } else {
+            *Inicio = (players)malloc(sizeof(pl));
+            fread(&pontos, sizeof(int), 1, Scr);
+            fread(jogador, sizeof(char), sizeof(jogador), Scr);
+
+            strcpy((*Inicio)->Name, jogador);
+            strcpy((*Inicio)->Score, pontos);
+            printf("--------------------------------\n"); //display info
+            printf("\nJogador: ");
+            puts(jogador);
+            printf("\nPontos: ");
+            puts(pontos);
+            (*Inicio)->next = NULL;
+        }
+    }
+    fclose(Archivaldo);
+    return 0;
+}
