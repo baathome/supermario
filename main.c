@@ -8,10 +8,11 @@
 // #include "game.h"
 #include "draw.h"
 #include "player.h"
+#include "level.h"
 // #include "level.h"
 
 //typedefs
-typedef enum GameScreen { SPLASH = 0, MAINMENU, GAME, SCORE, HELP, ABOUT }                     GameScreen;
+typedef enum GameScreen { SPLASH = 0, MAINMENU, GAME, SCORE, HELP, ABOUT }                     GameScreen; // TODO: LOAD SCREEN
 typedef enum MainMenuOption { NEWGAME = 0, CONTINUE, LOADMAP, RANKING, HELPS, ABOUTS, EXIT }   MainMenuOption;
 
 int main() {
@@ -21,15 +22,26 @@ int main() {
     const int splashscreenTimeout = 300;
     const char *windowTitle = "Super Mario DOS";
 
+    char level[29][120]; //Matriz de posições do nível
+    int currentLevel = 1;
+
     InitWindow(screenWidth, screenHeight, windowTitle);     //Inicializa janela da raylib
 
     Mario mario = initMario();
 
     Rectangle marioRec = { 0.0f, 0.0f, mario.txL.width / 8.0, mario.txL.height };
-    Rectangle destRec = { 0.0f, 0.0f, MARIO_WIDTH, MARIO_HEIGHT };
+    Rectangle marioDestRec = { 0.0f, 0.0f, MARIO_WIDTH, MARIO_HEIGHT };
+
+    Platform platforms[20];
+
+    initPlatforms(&platforms, 20);
+
+    printf("\n\n\nplatX = %d\n\n\n", platforms[0].start.x);
+
 
     MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opção selecionada do menu principal
-    int exit = 0; //flag para encerrar o jogo
+    bool flagExit = false; //flag para encerrar o jogo
+    bool flagPause = false;     //flag para ver se o jogo está pausado
 
     GameScreen currentScreen = SPLASH;
 
@@ -46,7 +58,7 @@ int main() {
     SetTargetFPS(60);
 
     //Loop do jogo
-    while (!WindowShouldClose() && !exit) {
+    while (!WindowShouldClose() && !flagExit) { //TOD: exit only through windowshouldclose
         //Lógica
         switch (currentScreen) {
             case SPLASH: {
@@ -62,7 +74,7 @@ int main() {
 
             case MAINMENU: {
                 if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
-                    if (currentMainMenuOption == EXIT || IsKeyPressed(KEY_ESCAPE)) exit = 1;
+                    if (currentMainMenuOption == EXIT || IsKeyPressed(KEY_ESCAPE)) flagExit = 1;
                     else if (currentMainMenuOption == HELPS) currentScreen = HELP;
                     else if (currentMainMenuOption == ABOUTS) currentScreen = ABOUT;
                     else if (currentMainMenuOption == RANKING) currentScreen = SCORE;
@@ -71,7 +83,39 @@ int main() {
                         framesCounter = 0;
 
                         if (currentMainMenuOption == NEWGAME) {
+                            //loadLevel(1);
                             //load stage 1
+                            currentLevel = 1;
+
+                            mario = initMario();
+                            bool sPlat = false;
+
+                            FILE *file = fopen("resources/fases/fase1.txt", "r"); //TODO: safer read
+
+                            for (int i = 0; i < 28; i++) {
+                                for (int j = 0; j < 120; j++) {
+                                    level[i][j] = getc(file);
+
+                                    if (level[i][j] == 'm') {
+                                        mario.pos.x = j;
+                                        mario.pos.y = i;
+                                    } else if (level[i][j] == 'p') {
+                                        if (!sPlat) {
+                                        }
+                                    }
+                                }
+
+                                getc(file);
+                            }
+
+                            int x;
+                            x = (int)getc(file) - 48;
+                            getc(file);
+                            x = (int)getc(file) - 48;
+                            getc(file);
+                            x = (int)getc(file) - 48;
+
+                            fclose(file);
                         } else if (currentMainMenuOption == CONTINUE) {
                             //loadsave
                         } else if (currentMainMenuOption == LOADMAP) {
@@ -88,14 +132,19 @@ int main() {
             } break;
 
             case GAME: {
-                if (IsKeyPressed(KEY_ESCAPE)) {
-                    //TODO: pause game, option to save progress
+                if (flagPause) {
+                    //TODO: option to save progress
+                    if (IsKeyPressed(KEY_ESCAPE)) flagPause = false;
+                    else if (IsKeyPressed(KEY_Q)) currentScreen = MAINMENU;
+                    else if (IsKeyPressed(KEY_S)) {
+                        //TODO: save and quit to main menu
+                    }
                 } else {
                     framesCounter++;
                     mario.pos.x += mario.speed.x * mario.speedMultiplier.x;
                     mario.pos.y += mario.speed.y * mario.speedMultiplier.y;
 
-                    printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
+                    //printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
 
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
@@ -103,13 +152,14 @@ int main() {
                     }
 
                     //g_GameMain();
-                    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
-                        mario.speed.x = -1;
+                    if (IsKeyPressed(KEY_ESCAPE)) flagPause = true;
+                    else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
+                        mario.speed.x = 1;
                         mario.facingRight = true;
 
                         if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;                        //TODO: add check on Y velocity
                     } else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
-                        mario.speed.x = 1;
+                        mario.speed.x = -1;
                         mario.facingRight = false;
 
                         if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;                        //TODO: add check on Y velocity
@@ -171,8 +221,16 @@ int main() {
                 // DrawText("GAME SCREEN", 20, 20, 40, MAROON);
                 // DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
                 //d_Draw();
-                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, destRec, mario.pos, 0, WHITE); //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
-                else DrawTexturePro(mario.txL, marioRec, destRec, mario.pos, 0, WHITE);
+
+                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);                         //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                else DrawTexturePro(mario.txL, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
+
+                if (flagPause) {
+                    DrawRectangle(0, 0, screenWidth, screenHeight, Fade(BLACK, 0.5));
+                    DrawText("Aperte ESC para voltar ao jogo", 350, 250, 30, WHITE);
+                    DrawText("Aperte Q para sair do jogo", 385, 290, 30, WHITE);
+                    DrawText("Aperte S para salvar e sair do jogo", 320, 330, 30, WHITE);
+                }
             } break;
 
             case SCORE: {

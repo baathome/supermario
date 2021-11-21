@@ -3,8 +3,8 @@
 
 #include "raylib.h"
 
-typedef enum MarioConsts { MARIO_WIDTH = 35, MARIO_HEIGHT = 70, MARIO_ANIMATION_SPEED = 10 }                                              MarioConsts;
-typedef enum TXMarioStates { MARIO_STOPPED = 0, MARIO_WALK1, MARIO_WALK2, MARIO_WALK3, MARIO_FALL, MARIO_JUMP, MARIO_DIE1, MARIO_DIE2 }   TXMarioStates;
+typedef enum MarioConsts { MARIO_WIDTH = 35, MARIO_HEIGHT = 65, MARIO_ANIMATION_SPEED = 10, GRAVITY = 10, JUMP_SPEED = 15 }               MarioConsts;
+typedef enum TXMarioFrames { MARIO_STOPPED = 0, MARIO_WALK1, MARIO_WALK2, MARIO_WALK3, MARIO_FALL, MARIO_JUMP, MARIO_DIE1, MARIO_DIE2 }   TXMarioFrames;
 
 typedef struct Mario {
     Vector2 pos;
