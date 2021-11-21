@@ -8,6 +8,8 @@
 // #include "game.h"
 #include "draw.h"
 #include "player.h"
+#include "inimigs.h"
+
 // #include "level.h"
 
 //typedefs
@@ -22,11 +24,13 @@ int main() {
     const char *windowTitle = "Super Mario DOS";
 
     InitWindow(screenWidth, screenHeight, windowTitle);     //Inicializa janela da raylib
-
+    Inimigs inimigs = initInimigs();
     Mario mario = initMario();
 
     Rectangle marioRec = { 0.0f, 0.0f, mario.txL.width / 8.0, mario.txL.height };
     Rectangle destRec = { 0.0f, 0.0f, MARIO_WIDTH, MARIO_HEIGHT };
+    Rectangle InimigsRec = {30.0f, 30.0f, inimigs.txL.width / 5, inimigs.txL.height};
+    Rectangle destInimigsRec= {30.0f, 30.0f, Inimigs_WIDTH,Inimigs_HEIGHT};
 
     MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opção selecionada do menu principal
     int exit = 0; //flag para encerrar o jogo
@@ -44,6 +48,7 @@ int main() {
     // g_CreateBlock(5.0, 5.0, 0);
 
     SetTargetFPS(60);
+    inimigs.facingRight = true;
 
     //Loop do jogo
     while (!WindowShouldClose() && !exit) {
@@ -94,12 +99,15 @@ int main() {
                     framesCounter++;
                     mario.pos.x += mario.speed.x * mario.speedMultiplier.x;
                     mario.pos.y += mario.speed.y * mario.speedMultiplier.y;
+                    inimigs.pos.x += inimigs.speed.x * inimigs.speedMultiplier.x;
+                    inimigs.pos.y += inimigs.speed.y * inimigs.speedMultiplier.y;
 
                     printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
 
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
                         mario.currentAnimationFrame++;
+                        inimigs.currentAnimationFrame++;
                     }
 
                     //g_GameMain();
@@ -118,6 +126,17 @@ int main() {
                         mario.currentAnimationFrame = 0;
                     }
 
+                    if (inimigs.speed.x = 0){
+                       inimigs.currentAnimationFrame = 0;
+                    }
+                     else if (inimigs.facingRight = true){
+                      inimigs.speed.x = 1;
+                        if (inimigs.currentAnimationFrame > Inimigs_WALK4) inimigs.currentAnimationFrame = Inimigs_WALK1;
+                      }else if (inimigs.facingRight = false){
+                        inimigs.speed.x = -1;
+                       if (inimigs.currentAnimationFrame > Inimigs_WALK4) inimigs.currentAnimationFrame = Inimigs_WALK1;
+                    }
+                    InimigsRec.x = (inimigs.currentAnimationFrame * InimigsRec.width);
                     marioRec.x = (mario.currentAnimationFrame * marioRec.width);
                 }
             } break;
@@ -173,6 +192,8 @@ int main() {
                 //d_Draw();
                 if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, destRec, mario.pos, 0, WHITE); //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(mario.txL, marioRec, destRec, mario.pos, 0, WHITE);
+                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE); //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE);
             } break;
 
             case SCORE: {
