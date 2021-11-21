@@ -172,15 +172,20 @@ int main() {
                         inimigs.currentAnimationFrame++;
                     }
 
-                    if (!collisionCheckMario(mario, platforms, MAX_PLATFORMS)) {
+                    if (collisionCheckMario(mario, platforms, MAX_PLATFORMS) == 0) {
                         //mario.speed.y = 1.0;
                         if (mario.speedMultiplier.y > 0.0 && mario.speed.y < 0.0) mario.speedMultiplier.y -= GRAVITY;
-                        else if (mario.speedMultiplier.y < 0.0) {
+                        else if (mario.speedMultiplier.y < 0.0 || mario.speed.y == 0.0) {
                             mario.speed.y = 1.0;
-                            mario.speedMultiplier.y += GRAVITY;
+                            mario.speedMultiplier.y = GRAVITY;
                         } else mario.speedMultiplier.y += GRAVITY;
+                    } else if (collisionCheckMario(mario, platforms, MAX_PLATFORMS) == 1) {
+                        mario.speed.y = 1.0;
+                        mario.speed.x = 0.0;
+                        mario.speedMultiplier.y = GRAVITY * 3;
                     } else {
                         mario.speed.y = 0.0;
+                        mario.speed.x = 0.0;
                         mario.speedMultiplier.y = 0.0;
                     }
 

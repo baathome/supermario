@@ -23,9 +23,9 @@ int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms) {
 
     for (int i = 0; i < n; i++) {
         if (CheckCollisionRecs(platforms[i], (Rectangle) { mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT })) {
-            if (platforms[i].y > mario.pos.y) return -1;            // mario acertou por baixo
+            if (platforms[i].y > mario.pos.y) return -1;  // mario acertou por baixo
 
-            return 1;             //mario acertou por cima
+            return 1;                                     //mario acertou por cima
         }
     }
 
