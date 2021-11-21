@@ -37,12 +37,9 @@ int main() {
     Rectangle InimigsRec = { 1000.0f, 30.0f, inimigs.txL.width / 5.0, inimigs.txL.height };
     Rectangle destInimigsRec = { 1000.0f, 30.0f, Inimigs_WIDTH, Inimigs_HEIGHT };
 
-    Platform platforms[20];
+    Rectangle platforms[MAX_PLATFORMS];
 
-    //initPlatforms(&platforms, 20);
-
-    printf("\n\n\nplatX = %d\n\n\n", platforms[0].start.x);
-
+    initPlatforms(platforms, MAX_PLATFORMS);
 
     MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opção selecionada do menu principal
     bool flagExit = false; //flag para encerrar o jogo
@@ -94,7 +91,8 @@ int main() {
                             currentLevel = 1;
 
                             mario = initMario();
-                            bool sPlat = false;
+
+                            int sPlat = -1;                                 //Flag de plataforma para construção do nível
 
                             FILE *file = fopen("resources/fases/fase1.txt", "r"); //TODO: safer read
 
@@ -105,10 +103,21 @@ int main() {
                                     if (level[i][j] == 'm') {
                                         mario.pos.x = j;
                                         mario.pos.y = i;
-                                    } else if (level[i][j] == 'p') {
-                                        if (!sPlat) {
-                                        }
+                                    } else if (level[i][j] == 'p' && sPlat == -1) {
+                                        sPlat = j;
+                                        platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].x = j * PIXELS_BY_COLUMN;
+                                        platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].y = i * PIXELS_BY_LINE;
+                                    } else if (level[i][j] == '-' && sPlat != -1) {
+                                        platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].width = (j - sPlat) * PIXELS_BY_COLUMN;
+                                        platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].height = PIXELS_BY_LINE;
+                                        sPlat = -1;
                                     }
+                                }
+
+                                if (sPlat != -1) {
+                                    platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].width = 120 * PIXELS_BY_COLUMN;
+                                    platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].height = PIXELS_BY_LINE;
+                                    sPlat = -1;
                                 }
 
                                 getc(file);
@@ -251,6 +260,11 @@ int main() {
 
                 if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE);                            //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, inimigs.pos, 0, WHITE);
+
+                for (int i = 0; i < getNextPlatformIndex(platforms, MAX_PLATFORMS); i++) {
+                    printf("%d - x: %f  y: %f  width: %f   height: %f\n", i, platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+                    DrawRectangle(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height, DARKBLUE);
+                }
 
                 if (flagPause) {
                     DrawRectangle(0, 0, screenWidth, screenHeight, Fade(BLACK, 0.5));

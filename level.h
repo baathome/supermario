@@ -3,12 +3,13 @@
 
 #include "raylib.h"
 
-typedef struct Platform {
-    Vector2 start;
-    Vector2 end;
-} Platform;
+#define MAX_PLATFORMS    20
+#define PIXELS_BY_LINE   25.0
+#define PIXELS_BY_COLUMN 10.0
 
-void initPlatforms();
+void initPlatforms(Rectangle platforms[], int nPlatforms);
+
+int getNextPlatformIndex(Rectangle platforms[], int nPlatforms);
 
 //void loadLevel(int currentLevel, Mario *mario, Platform *platforms, );
 
