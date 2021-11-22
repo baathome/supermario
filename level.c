@@ -4,7 +4,6 @@
 void initPlatforms(Rectangle platforms[], int nPlatforms) {
     for (int i = 0; i < nPlatforms; i++) {
         platforms[i].height = -1.0;
-        printf("i %d - %f\n", i, platforms[i].height);
     }
 }
 
@@ -36,4 +35,18 @@ int getNextGameObjectIndex(GameObject objects[], int nGameObjects) {
         i++;
     }
     return i;
+}
+
+int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms) {
+    int i = 0, n = getNextPlatformIndex(platforms, nPlatforms);
+
+    for (int i = 0; i < n; i++) {
+        if (CheckCollisionRecs(platforms[i], (Rectangle) { mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT })) {
+            if (platforms[i].y > mario.pos.y) return -1;  // mario acertou por baixo
+
+            return 1;                                     //mario acertou por cima
+        }
+    }
+
+    return 0;
 }

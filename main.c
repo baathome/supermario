@@ -170,9 +170,6 @@ int main() {
                     inimigs.pos.x += inimigs.speed.x;
                     inimigs.pos.y += inimigs.speed.y;
 
-
-                    printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
-
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
                         mario.currentAnimationFrame++;

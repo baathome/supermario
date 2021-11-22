@@ -10,7 +10,7 @@
 #define PIXELS_BY_LINE   25.0
 #define PIXELS_BY_COLUMN 10.0
 
-typedef enum GameObjectType { CANO_D, CANO_E, SPAWN } GameObjectType;
+typedef enum GameObjectType { CANO_D, CANO_E, SPAWN, POWERUP } GameObjectType;
 
 typedef struct GameObject {
     Vector2 pos;
@@ -19,9 +19,10 @@ typedef struct GameObject {
 } GameObject;
 
 void initPlatforms(Rectangle platforms[], int nPlatforms);
+
 void initGameObjects(GameObject objects[], int nGameObjects);
 
-void  unloadGameobjectTX(GameObject gameobject);
+void unloadGameobjectTX(GameObject objects[], int nGameObjects);
 
 int getNextPlatformIndex(Rectangle platforms[], int nPlatforms);
 
