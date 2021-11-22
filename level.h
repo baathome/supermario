@@ -22,9 +22,9 @@ void initPlatforms(Rectangle platforms[], int nPlatforms);
 
 void initGameObjects(GameObject objects[], int nGameObjects);
 
-void unloadGameobjectTX(GameObject objects[], int nGameObjects);
-
 int getNextPlatformIndex(Rectangle platforms[], int nPlatforms);
+
+int getNextGameObjectIndex(GameObject objects[], int nGameObjects);
 
 int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms);
 

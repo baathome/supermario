@@ -29,6 +29,10 @@ int main() {
     InitWindow(screenWidth, screenHeight, windowTitle);     //Inicializa janela da raylib
 
     Texture2D txFloor = LoadTexture("resources/floor.png");
+    Texture2D txCanoD = LoadTexture("resources/canoD.png");
+    Texture2D txCanoE = LoadTexture("resources/canoE.png");
+    //Texture2D txFloor = LoadTexture("resources/floor.png");
+    //Texture2D txFloor = LoadTexture("resources/floor.png");
 
     Mario mario = initMario();
 
@@ -43,6 +47,10 @@ int main() {
     Rectangle platforms[MAX_PLATFORMS];
 
     initPlatforms(platforms, MAX_PLATFORMS);
+
+    GameObject objects[MAX_GAME_OBJECTS];
+
+    initGameObjects(objects, MAX_GAME_OBJECTS);
 
     MainMenuOption currentMainMenuOption = NEWGAME; //enum para listar a opção selecionada do menu principal
     bool flagExit = false; //flag para encerrar o jogo
@@ -95,6 +103,9 @@ int main() {
 
                             mario = initMario();
 
+                            initGameObjects(objects, MAX_GAME_OBJECTS);
+                            initPlatforms(platforms, MAX_PLATFORMS);
+
                             int sPlat = -1;                                 //Flag de plataforma para construção do nível
 
                             platforms[0].x = 0;
@@ -119,6 +130,13 @@ int main() {
                                         platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].width = (j - sPlat) * PIXELS_BY_COLUMN;
                                         platforms[getNextPlatformIndex(platforms, MAX_PLATFORMS)].height = PIXELS_BY_LINE;
                                         sPlat = -1;
+                                    } else if (level[i][j] - 48 > 0 && level[i][j] - 48 < 10) {
+                                        if (j > 60) {
+                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].type = CANO_D;
+                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].tx = txCanoD;
+                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = j * PIXELS_BY_COLUMN;
+                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = i * PIXELS_BY_LINE;
+                                        }
                                     }
                                 }
 
@@ -173,15 +191,16 @@ int main() {
                     inimigs.pos.x += inimigs.speed.x;
                     inimigs.pos.y += inimigs.speed.y;
 
+
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
                         mario.currentAnimationFrame++;
                         inimigs.currentAnimationFrame++;
                     }
 
-                    Rectangle *platform = collisionCheck(&(Rectangle){mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT}, platforms, MAX_PLATFORMS);
+                    Rectangle *platform = collisionCheck(&(Rectangle) { mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT }, platforms, MAX_PLATFORMS);
 
-                    if(platform){
+                    if (platform) {
                         float plat_right = platform->x + platform->width;
                         float plat_bottom = platform->y + platform->height;
 
@@ -189,41 +208,45 @@ int main() {
                         float mario_bottom = mario.pos.y + MARIO_HEIGHT;
 
                         // if(mario.pos.y < plat_bottom && mario_bottom > platform->y) {
-                        if(mario.pos.x < platform->x && mario_right > platform->x) {
-                            if(fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT){
-                                if(mario.speed.y < 0.0) {
+                        if (mario.pos.x < platform->x && mario_right > platform->x) {
+                            if (fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT) {
+                                if (mario.speed.y < 0.0) {
                                     mario.speed.y = 0.0;
                                 }
+
                                 mario.pos.y = plat_bottom;
                             } else if (fabsf(mario_bottom - platform->y) < STEP_HEIGHT) {
-                                if(mario.speed.y > 0.0) {
+                                if (mario.speed.y > 0.0) {
                                     mario.speed.y = 0.0;
                                 }
+
                                 mario.pos.y = platform->y - MARIO_HEIGHT;
                             } else {
                                 mario.speed.x = 0.0;
                                 mario.pos.x = platform->x - MARIO_WIDTH;
                             }
-                        } else if(mario.pos.x < plat_right && mario_right > plat_right) {
-                            if(fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT){
-                                if(mario.speed.y < 0.0) {
+                        } else if (mario.pos.x < plat_right && mario_right > plat_right) {
+                            if (fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT) {
+                                if (mario.speed.y < 0.0) {
                                     mario.speed.y = 0.0;
                                 }
+
                                 mario.pos.y = plat_bottom;
                             } else if (fabsf(mario_bottom - platform->y) < STEP_HEIGHT) {
-                                if(mario.speed.y > 0.0) {
+                                if (mario.speed.y > 0.0) {
                                     mario.speed.y = 0.0;
                                 }
+
                                 mario.pos.y = platform->y - MARIO_HEIGHT;
                             } else {
                                 mario.speed.x = 0.0;
                                 mario.pos.x = plat_right;
                             }
                         } else {
-                            if(mario.pos.y < platform->y && mario_bottom > platform->y) {
+                            if (mario.pos.y < platform->y && mario_bottom > platform->y) {
                                 mario.speed.y = 0.0;
                                 mario.pos.y = platform->y - MARIO_HEIGHT;
-                            } else if(mario.pos.y < plat_bottom && mario_bottom > plat_bottom) {
+                            } else if (mario.pos.y < plat_bottom && mario_bottom > plat_bottom) {
                                 mario.speed.y = 0.0;
                                 mario.pos.y = plat_bottom;
                             }
@@ -295,7 +318,6 @@ int main() {
 
                     marioRec.x = (mario.currentAnimationFrame * marioRec.width);
                 }
-            }
 
             break;
 
@@ -350,17 +372,21 @@ int main() {
                 // DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
                 //d_Draw();
 
-                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);  //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);                      //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 //else DrawTexturePro(mario.txL, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
                 else DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);
 
-                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);                                       //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
+                if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);                                                           //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);
 
                 DrawTexturePro(txFloor, (Rectangle) { 0.0f, 0.0f, txFloor.width, txFloor.height }, (Rectangle) { platforms [0].x, platforms [0].y, platforms[0].width, platforms[0].height }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
 
                 for (int i = 1; i < getNextPlatformIndex(platforms, MAX_PLATFORMS); i++) {
                     DrawRectangle(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height, DARKBLUE);
+                }
+
+                for (int i = 1; i < getNextGameObjectIndex(objects, MAX_GAME_OBJECTS); i++) {
+                    if (objects[i].type == CANO_D || objects[i].type == CANO_E) DrawTexturePro(objects[i].tx, (Rectangle) { 0.0f, 0.0f, objects[i].tx.width, objects[i].tx.height }, (Rectangle) { objects[i].pos.x, objects[i].pos.y, MARIO_WIDTH * 2, MARIO_HEIGHT }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
                 }
 
                 if (flagPause) {
@@ -396,6 +422,8 @@ int main() {
     unloadMarioTX(mario);
     unloadInimigsTX(inimigs);
     UnloadTexture(txFloor);
+    UnloadTexture(txCanoE);
+    UnloadTexture(txCanoD);
     CloseWindow();
 
     return 0;
