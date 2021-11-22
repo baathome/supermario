@@ -6,6 +6,7 @@
 #include "player.h"
 
 #define MAX_PLATFORMS    2000
+#define MAX_INIMIGS 200
 #define MAX_GAME_OBJECTS 300
 #define PIXELS_BY_LINE   25.0
 #define PIXELS_BY_COLUMN 10.0
@@ -29,6 +30,8 @@ int getNextGameObjectIndex(GameObject objects[], int nGameObjects);
 int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms);
 
 Rectangle *collisionCheck(Rectangle *rect, Rectangle platforms[], int nPlatforms);
+
+void hitPlatform(ColRectangle *col_rect, Rectangle *platform);
 
 //void loadLevel(int currentLevel, Mario *mario, Platform *platforms, );
 

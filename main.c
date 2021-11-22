@@ -36,7 +36,7 @@ int main() {
 
     Mario mario = initMario();
 
-    Inimigs inimigs = initInimigs();
+    Inimigs inimigs = initInimigs();    
 
     Rectangle marioRec = { 0.0f, 0.0f, mario.txL.width / 8.0, mario.txL.height };
     Rectangle marioDestRec = { 0.0f, 0.0f, MARIO_WIDTH, MARIO_HEIGHT };
@@ -201,56 +201,12 @@ int main() {
                     Rectangle *platform = collisionCheck(&(Rectangle) { mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT }, platforms, MAX_PLATFORMS);
 
                     if (platform) {
-                        float plat_right = platform->x + platform->width;
-                        float plat_bottom = platform->y + platform->height;
-
-                        float mario_right = mario.pos.x + MARIO_WIDTH;
-                        float mario_bottom = mario.pos.y + MARIO_HEIGHT;
-
-                        // if(mario.pos.y < plat_bottom && mario_bottom > platform->y) {
-                        if (mario.pos.x < platform->x && mario_right > platform->x) {
-                            if (fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT) {
-                                if (mario.speed.y < 0.0) {
-                                    mario.speed.y = 0.0;
-                                }
-
-                                mario.pos.y = plat_bottom;
-                            } else if (fabsf(mario_bottom - platform->y) < STEP_HEIGHT) {
-                                if (mario.speed.y > 0.0) {
-                                    mario.speed.y = 0.0;
-                                }
-
-                                mario.pos.y = platform->y - MARIO_HEIGHT;
-                            } else {
-                                mario.speed.x = 0.0;
-                                mario.pos.x = platform->x - MARIO_WIDTH;
-                            }
-                        } else if (mario.pos.x < plat_right && mario_right > plat_right) {
-                            if (fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT) {
-                                if (mario.speed.y < 0.0) {
-                                    mario.speed.y = 0.0;
-                                }
-
-                                mario.pos.y = plat_bottom;
-                            } else if (fabsf(mario_bottom - platform->y) < STEP_HEIGHT) {
-                                if (mario.speed.y > 0.0) {
-                                    mario.speed.y = 0.0;
-                                }
-
-                                mario.pos.y = platform->y - MARIO_HEIGHT;
-                            } else {
-                                mario.speed.x = 0.0;
-                                mario.pos.x = plat_right;
-                            }
-                        } else {
-                            if (mario.pos.y < platform->y && mario_bottom > platform->y) {
-                                mario.speed.y = 0.0;
-                                mario.pos.y = platform->y - MARIO_HEIGHT;
-                            } else if (mario.pos.y < plat_bottom && mario_bottom > plat_bottom) {
-                                mario.speed.y = 0.0;
-                                mario.pos.y = plat_bottom;
-                            }
-                        }
+                        ColRectangle col_rect = (ColRectangle){mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT, mario.speed.x, mario.speed.y};
+                        hitPlatform(&col_rect, platform);
+                        mario.pos.x = col_rect.rect.x;
+                        mario.pos.y = col_rect.rect.y;
+                        mario.speed.x = col_rect.speed.x;
+                        mario.speed.y = col_rect.speed.y;
                     }
 
                     //g_GameMain();
