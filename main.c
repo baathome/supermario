@@ -45,7 +45,7 @@ int main() {
 
     Mario mario = initMario();
 
-    Inimigs inimigs = initInimigs();    
+    Inimigs inimigs = initInimigs();
 
     Rectangle marioRec = { 0.0f, 0.0f, mario.txL.width / 8.0, mario.txL.height };
     Rectangle marioDestRec = { 0.0f, 0.0f, MARIO_WIDTH, MARIO_HEIGHT };
@@ -217,7 +217,7 @@ int main() {
                     Rectangle *platform = collisionCheck(&(Rectangle) { mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT }, platforms, MAX_PLATFORMS);
 
                     if (platform) {
-                        ColRectangle col_rect = (ColRectangle){mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT, mario.speed.x, mario.speed.y};
+                        ColRectangle col_rect = (ColRectangle) { mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT, mario.speed.x, mario.speed.y };
                         hitPlatform(&col_rect, platform);
                         mario.pos.x = col_rect.rect.x;
                         mario.pos.y = col_rect.rect.y;
@@ -348,7 +348,7 @@ int main() {
 
                 if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);                      //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 //else DrawTexturePro(mario.txL, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
-                else DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);
+                else DrawTexturePro(mario.txL, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);
 
                 if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);                                                           //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);
