@@ -1,5 +1,6 @@
 #include "level.h"
 #include <stdio.h>
+#include <math.h>
 
 void initPlatforms(Rectangle platforms[], int nPlatforms) {
     for (int i = 0; i < nPlatforms; i++) {
@@ -65,4 +66,57 @@ Rectangle *collisionCheck(Rectangle *rect, Rectangle platforms[], int nPlatforms
     }
 
     return NULL;
+}
+
+void hitPlatform(ColRectangle *col_rect, Rectangle *platform) {
+    float plat_right = platform->x + platform->width;
+    float plat_bottom = platform->y + platform->height;
+
+    float col_right = col_rect->rect.x + col_rect->rect.width;
+    float col_bottom = col_rect->rect.y + col_rect->rect.height;
+
+
+    if (col_rect->rect.x < platform->x && col_right > platform->x) {
+        if (fabsf(col_rect->rect.y - plat_bottom) < STEP_HEIGHT) {
+            if (col_rect->speed.y < 0.0) {
+                col_rect->speed.y = 0.0;
+            }
+
+            col_rect->rect.y = plat_bottom;
+        } else if (fabsf(col_bottom - platform->y) < STEP_HEIGHT) {
+            if (col_rect->speed.y > 0.0) {
+                col_rect->speed.y = 0.0;
+            }
+
+            col_rect->rect.y = platform->y - MARIO_HEIGHT;
+        } else {
+            col_rect->speed.x = 0.0;
+            col_rect->rect.x = platform->x - col_rect->rect.width;
+        }
+    } else if (col_rect->rect.x < plat_right && col_right > plat_right) {
+        if (fabsf(col_rect->rect.y - plat_bottom) < STEP_HEIGHT) {
+            if (col_rect->speed.y < 0.0) {
+                col_rect->speed.y = 0.0;
+            }
+
+            col_rect->rect.y = plat_bottom;
+        } else if (fabsf(col_bottom - platform->y) < STEP_HEIGHT) {
+            if (col_rect->speed.y > 0.0) {
+                col_rect->speed.y = 0.0;
+            }
+
+            col_rect->rect.y = platform->y - MARIO_HEIGHT;
+        } else {
+            col_rect->speed.x = 0.0;
+            col_rect->rect.x = plat_right;
+        }
+    } else {
+        if (col_rect->rect.y < platform->y && col_bottom > platform->y) {
+            col_rect->speed.y = 0.0;
+            col_rect->rect.y = platform->y - MARIO_HEIGHT;
+        } else if (col_rect->rect.y < plat_bottom && col_bottom > plat_bottom) {
+            col_rect->speed.y = 0.0;
+            col_rect->rect.y = plat_bottom;
+        }
+    }
 }
