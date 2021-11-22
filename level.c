@@ -31,3 +31,15 @@ int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms) {
 
     return 0;
 }
+
+Rectangle *collisionCheck(Rectangle *rect, Rectangle platforms[], int nPlatforms) {
+    int i = 0, n = getNextPlatformIndex(platforms, nPlatforms);
+
+    for (int i = 0; i < n; i++) {
+        if (CheckCollisionRecs(platforms[i], *rect)) {
+            return platforms + i;
+        }
+    }
+
+    return NULL;
+}

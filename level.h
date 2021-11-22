@@ -14,6 +14,8 @@ int getNextPlatformIndex(Rectangle platforms[], int nPlatforms);
 
 int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms);
 
+Rectangle *collisionCheck(Rectangle *rect, Rectangle platforms[], int nPlatforms);
+
 //void loadLevel(int currentLevel, Mario *mario, Platform *platforms, );
 
 #endif

@@ -4,6 +4,7 @@
 
 //includes
 #include <stdio.h>
+#include <math.h>
 #include "raylib.h"
 // #include "game.h"
 #include "draw.h"
@@ -157,14 +158,21 @@ int main() {
                 } else framesCounter++;
 
                 {
-                    mario.pos.x += mario.speed.x * mario.speedMultiplier.x;
-                    mario.pos.y += mario.speed.y * mario.speedMultiplier.y;
+                    // mario.speed.x += MARIO_SPEED;
+                    mario.speed.y += GRAVITY;
+
+
+                    // mario.pos.x += mario.speed.x * mario.speedMultiplier.x;
+                    // mario.pos.y += mario.speed.y * mario.speedMultiplier.y;
+
+                    mario.pos.x += mario.speed.x;
+                    mario.pos.y += mario.speed.y;
 
                     inimigs.pos.x += inimigs.speed.x;
                     inimigs.pos.y += inimigs.speed.y;
 
 
-                    printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
+                    // printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
 
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
@@ -172,31 +180,65 @@ int main() {
                         inimigs.currentAnimationFrame++;
                     }
 
-                    if (collisionCheckMario(mario, platforms, MAX_PLATFORMS) == 0) {
-                        //mario.speed.y = 1.0;
-                        if (mario.speedMultiplier.y > 0.0 && mario.speed.y < 0.0) mario.speedMultiplier.y -= GRAVITY;
-                        else if (mario.speedMultiplier.y < 0.0 || mario.speed.y == 0.0) {
-                            mario.speed.y = 1.0;
-                            mario.speedMultiplier.y = GRAVITY;
-                        } else mario.speedMultiplier.y += GRAVITY;
-                    } else if (collisionCheckMario(mario, platforms, MAX_PLATFORMS) == 1) {
-                        mario.speed.y = 1.0;
-                        mario.speed.x = 0.0;
-                        mario.speedMultiplier.y = GRAVITY * 3;
-                    } else {
-                        mario.speed.y = 0.0;
-                        mario.speed.x = 0.0;
-                        mario.speedMultiplier.y = 0.0;
+                    Rectangle *platform = collisionCheck(&(Rectangle){mario.pos.x, mario.pos.y, MARIO_WIDTH, MARIO_HEIGHT}, platforms, MAX_PLATFORMS);
+
+                    if(platform){
+                        float plat_right = platform->x + platform->width;
+                        float plat_bottom = platform->y + platform->height;
+
+                        float mario_right = mario.pos.x + MARIO_WIDTH;
+                        float mario_bottom = mario.pos.y + MARIO_HEIGHT;
+
+                        // if(mario.pos.y < plat_bottom && mario_bottom > platform->y) {
+                        if(mario.pos.x < platform->x && mario_right > platform->x) {
+                            if(fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT){
+                                if(mario.speed.y < 0.0) {
+                                    mario.speed.y = 0.0;
+                                }
+                                mario.pos.y = plat_bottom;
+                            } else if (fabsf(mario_bottom - platform->y) < STEP_HEIGHT) {
+                                if(mario.speed.y > 0.0) {
+                                    mario.speed.y = 0.0;
+                                }
+                                mario.pos.y = platform->y - MARIO_HEIGHT;
+                            } else {
+                                mario.speed.x = 0.0;
+                                mario.pos.x = platform->x - MARIO_WIDTH;
+                            }
+                        } else if(mario.pos.x < plat_right && mario_right > plat_right) {
+                            if(fabsf(mario.pos.y - plat_bottom) < STEP_HEIGHT){
+                                if(mario.speed.y < 0.0) {
+                                    mario.speed.y = 0.0;
+                                }
+                                mario.pos.y = plat_bottom;
+                            } else if (fabsf(mario_bottom - platform->y) < STEP_HEIGHT) {
+                                if(mario.speed.y > 0.0) {
+                                    mario.speed.y = 0.0;
+                                }
+                                mario.pos.y = platform->y - MARIO_HEIGHT;
+                            } else {
+                                mario.speed.x = 0.0;
+                                mario.pos.x = plat_right;
+                            }
+                        } else {
+                            if(mario.pos.y < platform->y && mario_bottom > platform->y) {
+                                mario.speed.y = 0.0;
+                                mario.pos.y = platform->y - MARIO_HEIGHT;
+                            } else if(mario.pos.y < plat_bottom && mario_bottom > plat_bottom) {
+                                mario.speed.y = 0.0;
+                                mario.pos.y = plat_bottom;
+                            }
+                        }
                     }
 
                     //g_GameMain();
                     if (IsKeyPressed(KEY_ESCAPE)) flagPause = true;
                     else if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_SPACE)) && mario.speed.y == 0.0) {
-                        mario.speed.y = -1.0;
-                        mario.speedMultiplier.y = JUMP_SPEED * 6;
+                        mario.speed.y = -JUMP_SPEED * 6.0;
+                        // mario.speedMultiplier.y = JUMP_SPEED * 6;
                         mario.currentAnimationFrame = MARIO_JUMP;
                     } else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
-                        mario.speed.x = 1.0;
+                        mario.speed.x = MARIO_SPEED;
                         mario.facingRight = true;
 
                         if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;
@@ -207,7 +249,7 @@ int main() {
                         //mario.pos.y -=  mario.speed.y - MARIO_JUMP + (GRAVITY * (framesCounter++ / 60));
                         //TODO: add check on Y velocity}
                     } else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
-                        mario.speed.x = -1.0;
+                        mario.speed.x = -MARIO_SPEED;
                         mario.facingRight = false;
 
                         if (mario.currentAnimationFrame > MARIO_WALK3) mario.currentAnimationFrame = MARIO_WALK1;
@@ -311,7 +353,7 @@ int main() {
 
                 if (mario.facingRight) DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);  //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 //else DrawTexturePro(mario.txL, marioRec, marioDestRec, (Vector2) { mario.pos.x * -1.0, mario.pos.y }, 0, WHITE);
-                else DrawTexturePro(mario.txL, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);
+                else DrawTexturePro(mario.txR, marioRec, (Rectangle) { 0, 0, marioDestRec.width, marioDestRec.height }, (Vector2) { mario.pos.x * -1.0, mario.pos.y * -1.0 }, 0, WHITE);
 
                 if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);                                       //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);
