@@ -27,6 +27,8 @@ int main() {
 
     InitWindow(screenWidth, screenHeight, windowTitle);     //Inicializa janela da raylib
 
+    Texture2D txFloor = LoadTexture("resources/floor.png");
+
     Mario mario = initMario();
 
     Inimigs inimigs = initInimigs();
@@ -93,6 +95,11 @@ int main() {
                             mario = initMario();
 
                             int sPlat = -1;                                 //Flag de plataforma para construção do nível
+
+                            platforms[0].x = 0;
+                            platforms[0].y = 680;
+                            platforms[0].width = screenWidth;
+                            platforms[0].height = PIXELS_BY_LINE;
 
                             FILE *file = fopen("resources/fases/fase1.txt", "r"); //TODO: safer read
 
@@ -316,7 +323,9 @@ int main() {
                 if (inimigs.facingRight) DrawTexturePro(inimigs.txR, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);                                       //TODO: fix phantom hand bug by splitting textures into single files and turning mario.txR and txL into arrays
                 else DrawTexturePro(inimigs.txL, InimigsRec, destInimigsRec, (Vector2) { inimigs.pos.x * -1.0, inimigs.pos.y * -1.0 }, 0, WHITE);
 
-                for (int i = 0; i < getNextPlatformIndex(platforms, MAX_PLATFORMS); i++) {
+                DrawTexturePro(txFloor, (Rectangle) { 0.0f, 0.0f, txFloor.width, txFloor.height }, (Rectangle) { platforms [0].x, platforms [0].y, platforms[0].width, platforms[0].height }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
+
+                for (int i = 1; i < getNextPlatformIndex(platforms, MAX_PLATFORMS); i++) {
                     DrawRectangle(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height, DARKBLUE);
                 }
 
@@ -352,6 +361,7 @@ int main() {
     UnloadFont(fontMario);
     unloadMarioTX(mario);
     unloadInimigsTX(inimigs);
+    UnloadTexture(txFloor);
     CloseWindow();
 
     return 0;

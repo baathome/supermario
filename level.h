@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include "player.h"
 
-#define MAX_PLATFORMS    20
+#define MAX_PLATFORMS    2000
 #define PIXELS_BY_LINE   25.0
 #define PIXELS_BY_COLUMN 10.0
 
