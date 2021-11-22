@@ -4,6 +4,7 @@
 
 #include "raylib.h"
 #include "player.h"
+#include "inimigs.h"
 
 #define MAX_PLATFORMS    2000
 #define MAX_INIMIGS 200
@@ -28,6 +29,8 @@ int getNextPlatformIndex(Rectangle platforms[], int nPlatforms);
 int getNextGameObjectIndex(GameObject objects[], int nGameObjects);
 
 int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms);
+
+Inimigs *inimigsCollisionCheck(Rectangle *rect, Inimigs *inimigs, int nInimigs);
 
 Rectangle *collisionCheck(Rectangle *rect, Rectangle platforms[], int nPlatforms);
 

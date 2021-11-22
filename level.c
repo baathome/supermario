@@ -56,6 +56,17 @@ int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms) {
     return 0;
 }
 
+Inimigs *inimigsCollisionCheck(Rectangle *rect, Inimigs *inimigs, int nInimigs) {
+    for(int i = 0; i < nInimigs; i++) {
+        Inimigs *inimig = inimigs + i;
+        if(CheckCollisionRecs((Rectangle){inimig->pos.x, inimig->pos.y, INIMIGS_WIDTH, INIMIGS_HEIGHT}, *rect)) {
+            return inimig;
+        }
+    }
+
+    return NULL;
+}
+
 Rectangle *collisionCheck(Rectangle *rect, Rectangle platforms[], int nPlatforms) {
     int i = 0, n = getNextPlatformIndex(platforms, nPlatforms);
 
