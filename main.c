@@ -318,6 +318,7 @@ int main() {
 
                     marioRec.x = (mario.currentAnimationFrame * marioRec.width);
                 }
+            }
 
             break;
 
