@@ -28,6 +28,15 @@ int main() {
 
     InitWindow(screenWidth, screenHeight, windowTitle);     //Inicializa janela da raylib
 
+     InitAudioDevice();
+
+    Sound pulo = LoadSound ("resources/som/pulo.wav"); // Load sound from file
+    Sound dano = LoadSound ("resources/som/dano.wav"); // Load sound from file
+    Sound smb_gameover = LoadSound ("resources/som/smb_gameover.wav"); // Load sound from file
+    Sound seta_menu = LoadSound ("resources/som/seta_menu.wav"); // Load sound from file
+    Sound smb_coin = LoadSound ("resources/som/smb_coin.wav"); // Load sound from file
+    Sound inicio = LoadSound ("resources/som/inicio.wav");
+
     Texture2D txFloor = LoadTexture("resources/floor.png");
     Texture2D txCanoD = LoadTexture("resources/canoD.png");
     Texture2D txCanoE = LoadTexture("resources/canoE.png");
@@ -102,6 +111,7 @@ int main() {
                             currentLevel = 1;
 
                             mario = initMario();
+                            PlaySound (inicio);
 
                             initGameObjects(objects, MAX_GAME_OBJECTS);
                             initPlatforms(platforms, MAX_PLATFORMS);
@@ -132,10 +142,10 @@ int main() {
                                         sPlat = -1;
                                     } else if (level[i][j] - 48 > 0 && level[i][j] - 48 < 10) {
                                         if (j > 60) {
-                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].type = CANO_D;
                                             objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].tx = txCanoD;
                                             objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = j * PIXELS_BY_COLUMN;
                                             objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = i * PIXELS_BY_LINE;
+                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].type = CANO_D;
                                         }
                                     }
                                 }
@@ -166,9 +176,13 @@ int main() {
                 } else if (IsKeyPressed(KEY_DOWN)) {
                     if (currentMainMenuOption == 6) currentMainMenuOption = 0;
                     else currentMainMenuOption++;
+                    PlaySound (seta_menu);
+
                 } else if (IsKeyPressed(KEY_UP)) {
                     if (!currentMainMenuOption) currentMainMenuOption = 6;
                     else currentMainMenuOption--;
+                    PlaySound (seta_menu);
+
                 }
             } break;
 
@@ -215,6 +229,8 @@ int main() {
                         mario.speed.y = -JUMP_SPEED * 6.0;
                         // mario.speedMultiplier.y = JUMP_SPEED * 6;
                         mario.currentAnimationFrame = MARIO_JUMP;
+                        PlaySound (pulo);
+
                     } else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
                         mario.speed.x = MARIO_SPEED;
                         mario.facingRight = true;
@@ -245,6 +261,7 @@ int main() {
                             mario.currentAnimationFrame = MARIO_FALL;
                         } else {
                             mario.currentAnimationFrame = MARIO_JUMP;
+
                         }
                     }
 
@@ -343,7 +360,10 @@ int main() {
                 }
 
                 for (int i = 1; i < getNextGameObjectIndex(objects, MAX_GAME_OBJECTS); i++) {
-                    if (objects[i].type == CANO_D || objects[i].type == CANO_E) DrawTexturePro(objects[i].tx, (Rectangle) { 0.0f, 0.0f, objects[i].tx.width, objects[i].tx.height }, (Rectangle) { objects[i].pos.x, objects[i].pos.y, MARIO_WIDTH * 2, MARIO_HEIGHT }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
+                    if (objects[i].type == CANO_D || objects[i].type == CANO_E) {
+                        DrawTexturePro(objects[i].tx, (Rectangle) { 0.0f, 0.0f, objects[i].tx.width, objects[i].tx.height }, (Rectangle) { objects[i].pos.x, objects[i].pos.y, MARIO_WIDTH * 2, MARIO_HEIGHT }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
+                        printf("draw\n");
+                    }
                 }
 
                 if (flagPause) {
@@ -374,6 +394,14 @@ int main() {
 
         EndDrawing();
     }
+    UnloadSound(pulo);     // Unload sound data
+    UnloadSound(dano);     // Unload sound data
+    UnloadSound(seta_menu);
+    UnloadSound(smb_coin);
+    UnloadSound(smb_gameover);
+    UnloadSound(inicio);
+
+    CloseAudioDevice();
 
     UnloadFont(fontMario);
     unloadMarioTX(mario);
