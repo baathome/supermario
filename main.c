@@ -162,24 +162,16 @@ int main() {
                     else if (IsKeyPressed(KEY_S)) {
                         //TODO: save and quit to main menu
                     }
-                } else framesCounter++;
-
-                {
-                    // mario.speed.x += MARIO_SPEED;
+                } else {
+                    
+                    framesCounter++;
                     mario.speed.y += GRAVITY;
-
-
-                    // mario.pos.x += mario.speed.x * mario.speedMultiplier.x;
-                    // mario.pos.y += mario.speed.y * mario.speedMultiplier.y;
 
                     mario.pos.x += mario.speed.x;
                     mario.pos.y += mario.speed.y;
 
                     inimigs.pos.x += inimigs.speed.x;
                     inimigs.pos.y += inimigs.speed.y;
-
-
-                    // printf("%f  x  %f\n", mario.pos.x, mario.pos.y);
 
                     if (framesCounter >= 60 / MARIO_ANIMATION_SPEED) {
                         framesCounter = 0;
