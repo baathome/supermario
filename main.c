@@ -142,7 +142,7 @@ int main() {
                                         sPlat = -1;
                                     } else if (level[i][j] - 48 > 0 && level[i][j] - 48 < 10) {
                                         objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = j * PIXELS_BY_COLUMN;
-                                        objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = i * PIXELS_BY_LINE;
+                                        objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.y = i * PIXELS_BY_LINE;
 
                                         if (j > 60) {
                                             objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].tx = txCanoD;
@@ -359,10 +359,9 @@ int main() {
                     DrawRectangle(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height, DARKBLUE);
                 }
 
-                for (int i = 1; i < getNextGameObjectIndex(objects, MAX_GAME_OBJECTS); i++) {
+                for (int i = 0; i < getNextGameObjectIndex(objects, MAX_GAME_OBJECTS); i++) {
                     if (objects[i].type == CANO_D || objects[i].type == CANO_E) {
-                        DrawTexturePro(objects[i].tx, (Rectangle) { 0.0f, 0.0f, objects[i].tx.width, objects[i].tx.height }, (Rectangle) { objects[i].pos.x, objects[i].pos.y, objects[i].tx.width, objects[i].tx.height }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
-                        printf("draw\n");
+                        DrawTexturePro(objects[i].tx, (Rectangle) { 0.0f, 0.0f, objects[i].tx.width, objects[i].tx.height }, (Rectangle) { objects[i].pos.x, objects[i].pos.y, MARIO_WIDTH * 2, MARIO_HEIGHT }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
                     }
                 }
 
