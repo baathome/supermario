@@ -7,11 +7,30 @@ void initPlatforms(Rectangle platforms[], int nPlatforms) {
     }
 }
 
+void initGameObjects(GameObject objects[], int nGameObjects) {
+    for (int i = 0; i < nGameObjects; i++) {
+        objects[i].type = -1;
+    }
+}
+
 int getNextPlatformIndex(Rectangle platforms[], int nPlatforms) {
     int i = 0;
 
     while (i < nPlatforms) {
         if (platforms[i].height == -1.0) return i;
+
+        //printf("\ni %d - %f\n", i, platforms[i].height);
+        //getchar();
+        i++;
+    }
+    return i;
+}
+
+int getNextGameObjectIndex(GameObject objects[], int nGameObjects) {
+    int i = 0;
+
+    while (i < nGameObjects) {
+        if (objects[i].type == -1.0) return i;
 
         i++;
     }
