@@ -19,8 +19,6 @@ int getNextPlatformIndex(Rectangle platforms[], int nPlatforms) {
     while (i < nPlatforms) {
         if (platforms[i].height == -1.0) return i;
 
-        //printf("\ni %d - %f\n", i, platforms[i].height);
-        //getchar();
         i++;
     }
     return i;
@@ -37,6 +35,12 @@ int getNextGameObjectIndex(GameObject objects[], int nGameObjects) {
     return i;
 }
 
+// void unloadGameobjectsTX(GameObject objects[], int nGameObjects) {
+//     for (int i = 0; i < nGameObjects; i++) {
+//         UnloadTexture(objects[i].tx);
+//     }
+// }
+
 int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms) {
     int i = 0, n = getNextPlatformIndex(platforms, nPlatforms);
 
@@ -49,4 +53,16 @@ int collisionCheckMario(Mario mario, Rectangle platforms[], int nPlatforms) {
     }
 
     return 0;
+}
+
+Rectangle *collisionCheck(Rectangle *rect, Rectangle platforms[], int nPlatforms) {
+    int i = 0, n = getNextPlatformIndex(platforms, nPlatforms);
+
+    for (int i = 0; i < n; i++) {
+        if (CheckCollisionRecs(platforms[i], *rect)) {
+            return platforms + i;
+        }
+    }
+
+    return NULL;
 }
