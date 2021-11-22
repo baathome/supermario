@@ -132,10 +132,10 @@ int main() {
                                         sPlat = -1;
                                     } else if (level[i][j] - 48 > 0 && level[i][j] - 48 < 10) {
                                         if (j > 60) {
-                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].type = CANO_D;
                                             objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].tx = txCanoD;
                                             objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = j * PIXELS_BY_COLUMN;
                                             objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].pos.x = i * PIXELS_BY_LINE;
+                                            objects[getNextGameObjectIndex(objects, MAX_GAME_OBJECTS)].type = CANO_D;
                                         }
                                     }
                                 }
@@ -392,7 +392,10 @@ int main() {
                 }
 
                 for (int i = 1; i < getNextGameObjectIndex(objects, MAX_GAME_OBJECTS); i++) {
-                    if (objects[i].type == CANO_D || objects[i].type == CANO_E) DrawTexturePro(objects[i].tx, (Rectangle) { 0.0f, 0.0f, objects[i].tx.width, objects[i].tx.height }, (Rectangle) { objects[i].pos.x, objects[i].pos.y, MARIO_WIDTH * 2, MARIO_HEIGHT }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
+                    if (objects[i].type == CANO_D || objects[i].type == CANO_E) {
+                        DrawTexturePro(objects[i].tx, (Rectangle) { 0.0f, 0.0f, objects[i].tx.width, objects[i].tx.height }, (Rectangle) { objects[i].pos.x, objects[i].pos.y, MARIO_WIDTH * 2, MARIO_HEIGHT }, (Vector2) { 0.0, 0.0 }, 0, WHITE);
+                        printf("draw\n");
+                    }
                 }
 
                 if (flagPause) {
