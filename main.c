@@ -27,6 +27,15 @@ int main() {
 
     InitWindow(screenWidth, screenHeight, windowTitle);     //Inicializa janela da raylib
 
+     InitAudioDevice();
+
+    Sound pulo = LoadSound ("resources/som/pulo.wav"); // Load sound from file
+    Sound dano = LoadSound ("resources/som/dano.wav"); // Load sound from file
+    Sound smb_gameover = LoadSound ("resources/som/smb_gameover.wav"); // Load sound from file
+    Sound seta_menu = LoadSound ("resources/som/seta_menu.wav"); // Load sound from file
+    Sound smb_coin = LoadSound ("resources/som/smb_coin.wav"); // Load sound from file
+    Sound inicio = LoadSound ("resources/som/inicio.wav");
+
     Texture2D txFloor = LoadTexture("resources/floor.png");
 
     Mario mario = initMario();
@@ -93,6 +102,7 @@ int main() {
                             currentLevel = 1;
 
                             mario = initMario();
+                            PlaySound (inicio);
 
                             int sPlat = -1;                                 //Flag de plataforma para construção do nível
 
@@ -147,9 +157,13 @@ int main() {
                 } else if (IsKeyPressed(KEY_DOWN)) {
                     if (currentMainMenuOption == 6) currentMainMenuOption = 0;
                     else currentMainMenuOption++;
+                    PlaySound (seta_menu);
+
                 } else if (IsKeyPressed(KEY_UP)) {
                     if (!currentMainMenuOption) currentMainMenuOption = 6;
                     else currentMainMenuOption--;
+                    PlaySound (seta_menu);
+
                 }
             } break;
 
@@ -199,6 +213,8 @@ int main() {
                         mario.speed.y = -1.0;
                         mario.speedMultiplier.y = JUMP_SPEED * 6;
                         mario.currentAnimationFrame = MARIO_JUMP;
+                        PlaySound (pulo);
+
                     } else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
                         mario.speed.x = 1.0;
                         mario.facingRight = true;
@@ -229,6 +245,7 @@ int main() {
                             mario.currentAnimationFrame = MARIO_FALL;
                         } else {
                             mario.currentAnimationFrame = MARIO_JUMP;
+
                         }
                     }
 
@@ -354,6 +371,14 @@ int main() {
 
         EndDrawing();
     }
+    UnloadSound(pulo);     // Unload sound data
+    UnloadSound(dano);     // Unload sound data
+    UnloadSound(seta_menu);
+    UnloadSound(smb_coin);
+    UnloadSound(smb_gameover);
+    UnloadSound(inicio);
+
+    CloseAudioDevice();
 
     UnloadFont(fontMario);
     unloadMarioTX(mario);
